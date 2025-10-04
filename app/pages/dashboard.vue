@@ -6,10 +6,12 @@ definePageMeta({
 </script>
 
 <template>
-    <UCard
-        class="w-full max-w-md"
-        variant="subtle"
-    >
-        Dashboard - Logged in!
-    </UCard>
+    <UContainer class="flex items-center justify-center py-8">
+        <UCard
+            class="w-full max-w-md"
+            variant="subtle"
+        >
+            Dashboard - Logged in!
+        </UCard>
+    </UContainer>
 </template>
