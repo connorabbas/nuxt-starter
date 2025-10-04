@@ -4,9 +4,7 @@ import { generateRuntimeConfig } from './server/utils/config'
 export default defineNuxtConfig({
     modules: [
         '@nuxt/eslint',
-        '@nuxt/ui',
-        '@pinia/nuxt',
-        'nuxt-csurf'
+        '@nuxt/ui'
     ],
     devtools: {
         enabled: Boolean(process.env.NUXT_DEVTOOLS) || false

@@ -3,16 +3,12 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 
 const items: NavigationMenuItem[] = [
     {
-        label: 'Dashboard',
-        to: '/dashboard'
+        label: 'Sign in',
+        to: '/sign-in'
     },
     {
-        label: 'Login',
-        to: '/login'
-    },
-    {
-        label: 'Register',
-        to: '/register'
+        label: 'Create account',
+        to: '/sign-up'
     }
 ]
 </script>

@@ -1,5 +1,15 @@
-<script setup>
+<script setup lang="ts">
+import { authClient } from '~/lib/auth-client'
 
+async function signOut() {
+    await authClient.signOut({
+        fetchOptions: {
+            onSuccess: () => {
+                navigateTo('/')
+            }
+        }
+    })
+}
 </script>
 
 <template>
@@ -15,12 +25,11 @@
                 <UColorModeButton />
 
                 <UButton
-                    to="https://github.com/nuxt-ui-templates/starter"
-                    target="_blank"
-                    icon="i-simple-icons-github"
-                    aria-label="GitHub"
+                    icon="i-lucide-log-out"
                     color="neutral"
                     variant="ghost"
+                    label="Log out"
+                    @click="signOut"
                 />
             </template>
         </UHeader>

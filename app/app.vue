@@ -1,6 +1,4 @@
 <script setup>
-console.log('app')
-
 useHead({
     meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }

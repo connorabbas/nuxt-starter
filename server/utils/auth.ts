@@ -14,4 +14,5 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true
     }
+    // TODO: email https://vuejsfeed.com/blog/vue-email https://nodemailer.com/
 })

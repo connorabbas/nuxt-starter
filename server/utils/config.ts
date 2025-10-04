@@ -17,7 +17,7 @@ export const generateRuntimeConfig = () => ({
         appName: process.env.NUXT_APP_NAME,
         auth: {
             redirectUserTo: '/dashboard',
-            redirectGuestTo: '/login'
+            redirectGuestTo: '/sign-up'
         }
     }
 })

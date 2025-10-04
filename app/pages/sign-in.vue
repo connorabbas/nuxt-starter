@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
-    layout: 'authenticated',
-    middleware: ['authenticated']
+    layout: 'auth',
+    middleware: ['guest']
 })
 </script>
 
@@ -10,6 +10,6 @@ definePageMeta({
         class="w-full max-w-md"
         variant="subtle"
     >
-        Dashboard - Logged in!
+        Sign in
     </UCard>
 </template>
