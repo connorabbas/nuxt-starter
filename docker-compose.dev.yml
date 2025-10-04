@@ -1,5 +1,5 @@
 services:
-  web:
+  nuxt:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -12,11 +12,36 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nuxt-auth-starter.rule=Host(`nuxt-auth-starter.localhost`)"
-      - "traefik.http.services.nuxt-auth-starter.loadbalancer.server.port=${NUXT_PORT:-3000}"
+      - "traefik.http.services.nuxt-auth-starter.loadbalancer.server.port=${NUXT_APP_PORT:-3000}"
     networks:
+      - web
       - proxy
+    depends_on:
+      - pgsql
+
+  pgsql:
+    image: 'postgres:17'
+    ports:
+      - '${DB_FORWARD_PORT:-5432}:5432'
+    environment:
+      PGPASSWORD: '${DB_PASSWORD:-secret}'
+      POSTGRES_DB: '${DB_DATABASE}'
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+    volumes:
+      - 'postgres-data:/var/lib/postgresql/data'
+    networks:
+      - web
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}" ]
+      retries: 3
+      timeout: 5s
+
+volumes:
+  postgres-data:
 
 networks:
+  web:
   proxy: # setup in separate container
     name: "traefik_network"
     external: true

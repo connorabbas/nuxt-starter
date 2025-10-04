@@ -1,5 +1,5 @@
 // @ts-check
-import withNuxt from './.nuxt/eslint.config.mjs';
+import withNuxt from './.nuxt/eslint.config.mjs'
 
 export default withNuxt({
     files: ['**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.mjs'],
@@ -23,9 +23,9 @@ export default withNuxt({
 
         // Formatting rules
         'indent': ['error', 4],
-        'semi': ['error', 'always'],
+        'semi': ['error', 'never'],
         'comma-dangle': ['error', 'never'],
         'quotes': ['error', 'single'],
         'linebreak-style': ['error', 'unix']
     }
-});
+})
