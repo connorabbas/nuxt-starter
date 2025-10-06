@@ -8,11 +8,12 @@ definePageMeta({
     middleware: ['guest']
 })
 
+const config = useRuntimeConfig()
 const toast = useToast()
 
 const schema = z.object({
     name: z.string('Name is required').min(5),
-    email: z.email('Invalid email'),
+    email: z.email('Invalid email format'),
     password: z.string('Password is required').min(8, 'Must be at least 8 characters'),
     confirmPassword: z.string('Please confirm your password')
 }).refine(data => data.password === data.confirmPassword, {
@@ -38,7 +39,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     const { error } = await authClient.signUp.email({
         name: event.data.name,
         email: event.data.email,
-        password: event.data.password
+        password: event.data.password,
+        callbackURL: '/dashboard?welcome=true'
     })
 
     if (error) {
@@ -55,7 +57,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         state.email = undefined
         state.password = undefined
         state.confirmPassword = undefined
-        navigateTo('/dashboard')
+        if (config.public.auth.mustVerifyEmail) {
+            navigateTo('/verify-email')
+        } else {
+            navigateTo('/dashboard')
+        }
     }
 
     submitting.value = false
@@ -71,7 +77,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     >
         <div class="flex flex-col text-center">
             <div class="text-xl text-pretty font-semibold text-highlighted">Create an account</div>
-            <div class="mt-1 text-base text-pretty text-muted">
+            <div class="mt-1 text-sm text-pretty text-muted">
                 Already have an account? <ULink
                     to="/sign-in"
                     class="text-primary hover:underline"

@@ -1,3 +1,4 @@
+import vue from '@vitejs/plugin-vue'
 import { generateRuntimeConfig } from './server/utils/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -21,6 +22,11 @@ export default defineNuxtConfig({
     eslint: {
         config: {
             stylistic: false
+        }
+    },
+    nitro: {
+        rollupConfig: {
+            plugins: [vue()]
         }
     }
 })

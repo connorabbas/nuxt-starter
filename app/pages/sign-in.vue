@@ -8,11 +8,11 @@ definePageMeta({
     middleware: ['guest']
 })
 
-const toast = useToast()
+const config = useRuntimeConfig()
 const route = useRoute()
 
 const schema = z.object({
-    email: z.email('Invalid email'),
+    email: z.email('Invalid email format'),
     password: z.string('Password is required').min(8, 'Must be at least 8 characters'),
     rememberMe: z.boolean().optional()
 })
@@ -26,6 +26,7 @@ const state = reactive<Partial<Schema>>({
     rememberMe: undefined
 })
 
+const serverError = ref('')
 const submitting = ref(false)
 const redirectTo = computed(() => {
     const redirect = route.query.redirect as string
@@ -43,10 +44,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     })
 
     if (error) {
-        toast.add({
-            title: error.message || error.statusText,
-            color: 'error'
-        })
+        const errMessage = error.message || error.statusText
+        if (config.public.auth.mustVerifyEmail && error.code === 'EMAIL_NOT_VERIFIED') {
+            navigateTo({ name: 'verify-email', query: { email: event.data.email } })
+        } else {
+            serverError.value = errMessage
+        }
     }
 
     submitting.value = false
@@ -62,7 +65,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     >
         <div class="flex flex-col text-center">
             <div class="text-xl text-pretty font-semibold text-highlighted">Welcome back</div>
-            <div class="mt-1 text-base text-pretty text-muted">
+            <div class="mt-1 text-sm text-pretty text-muted">
                 Don't have an account? <ULink
                     to="/sign-up"
                     class="text-primary hover:underline"
@@ -70,10 +73,19 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             </div>
         </div>
 
+        <UAlert
+            v-if="serverError"
+            color="error"
+            variant="subtle"
+            title="Error"
+            :description="serverError"
+            icon="i-lucide-circle-x"
+        />
+
         <UFormField
             label="Email"
             name="email"
-            autocomplete="username"
+            autocomplete="email"
             required
         >
             <UInput
