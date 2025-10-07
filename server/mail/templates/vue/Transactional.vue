@@ -12,6 +12,7 @@ import {
     Section as MSection,
     Text as MText
 } from '@vue-email/components'
+
 import {
     components,
     presets,
@@ -25,9 +26,9 @@ import {
 } from '~~/server/mail/styles'
 
 const props = defineProps<{
-    subject: string;
-    name: string;
-    actionUrl: string;
+    subject: string
+    actionUrl?: string
+    actionText?: string
 }>()
 
 const config = useRuntimeConfig()
@@ -40,7 +41,7 @@ const currentYear = new Date().getFullYear()
         <MPreview>{{ props.subject }}</MPreview>
 
         <MBody :style="components.body">
-            <!-- Header with App Name -->
+            <!-- Header -->
             <MContainer :style="presets.sectionHeader">
                 <MHeading
                     :style="presets.heading"
@@ -52,47 +53,57 @@ const currentYear = new Date().getFullYear()
 
             <!-- Main Content Card -->
             <MContainer :style="components.card">
+                <!-- Subheading slot -->
                 <MHeading
                     :style="presets.subheading"
                     as="h2"
                 >
-                    Hey, {{ props.name }}!
+                    <slot name="subheading" />
                 </MHeading>
 
                 <MSection>
+                    <!-- Body slot -->
                     <MText :style="presets.body">
-                        Thanks for signing up! Please verify your email address to get started.
+                        <slot name="body" />
                     </MText>
 
-                    <div :style="cn(textAlign.center, py[6])">
+                    <!-- Optional call to link/action button -->
+                    <div
+                        v-if="props.actionText && props.actionUrl"
+                        :style="cn(textAlign.center, py[6])"
+                    >
                         <MButton
                             :href="props.actionUrl"
                             :style="presets.buttonPrimary"
                         >
-                            Verify Email Address
+                            {{ props.actionText }}
                         </MButton>
                     </div>
                 </MSection>
 
+                <!-- Ending remarks -->
                 <MText :style="cn(text.sm, textColor.secondary, mb[4])">
-                    If you didn't create this account, you can safely ignore this email.
+                    <slot name="remarks" />
                 </MText>
 
-                <MHr :style="components.divider" />
+                <!-- Link trouble -->
+                <template v-if="props.actionText && props.actionUrl">
+                    <MHr :style="components.divider" />
 
-                <MText :style="cn(text.xs, textColor.muted, mb[1])">
-                    If you're having trouble clicking the "Verify Email Address" button,
-                    copy and paste the URL below into your web browser:
-                </MText>
+                    <MText :style="cn(text.xs, textColor.muted, mb[1])">
+                        If you're having trouble clicking the "{{ props.actionText }}" button,
+                        copy and paste the URL below into your web browser:
+                    </MText>
 
-                <MText :style="cn(text.xs, textColor.muted, components.breakWord, margin[0])">
-                    <MLink
-                        :href="props.actionUrl"
-                        :style="cn(components.link, text.xs)"
-                    >
-                        {{ props.actionUrl }}
-                    </MLink>
-                </MText>
+                    <MText :style="cn(text.xs, textColor.muted, components.breakWord, margin[0])">
+                        <MLink
+                            :href="props.actionUrl"
+                            :style="cn(components.link, text.xs)"
+                        >
+                            {{ props.actionUrl }}
+                        </MLink>
+                    </MText>
+                </template>
             </MContainer>
 
             <!-- Footer -->

@@ -24,7 +24,7 @@ export const generateRuntimeConfig = () => ({
         auth: {
             mustVerifyEmail: Boolean(process.env.NUXT_BETTER_AUTH_VERIFY_EMAIL || 1),
             redirectUserTo: '/dashboard',
-            redirectGuestTo: '/sign-in'
+            redirectGuestTo: '/login'
         }
     }
 })

@@ -1,12 +1,12 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { runtimeConfig } from './config'
-import db from './db'
 import { sendMail } from './mailer'
 import { render } from '@vue-email/render'
-import WelcomeEmail from '~~/server/mail/templates/vue/auth/verify-email.vue'
+import WelcomeEmail from '~~/server/mail/templates/vue/auth/VerifyEmail.vue'
 
 export const auth = betterAuth({
+    appName: runtimeConfig.public.appName,
     baseURL: runtimeConfig.public.baseURL,
     trustedOrigins: [runtimeConfig.public.baseURL as string],
     secret: runtimeConfig.betterAuthSecret,
@@ -35,6 +35,12 @@ export const auth = betterAuth({
                 subject,
                 html
             })
+        }
+    },
+    logger: {
+        level: 'error',
+        log: (level, message, ...args) => {
+            logger.log(level, message, ...args)
         }
     }
 })
