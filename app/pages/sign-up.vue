@@ -79,7 +79,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <div class="text-xl text-pretty font-semibold text-highlighted">Create an account</div>
             <div class="mt-1 text-sm text-pretty text-muted">
                 Already have an account? <ULink
-                    to="/sign-in"
+                    to="/login"
                     class="text-primary hover:underline"
                 >Sign in</ULink>.
             </div>
@@ -154,6 +154,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UButton
             label="Submit"
             type="submit"
+            class="w-full flex justify-center"
             :disabled="submitting"
             :loading="submitting"
         />

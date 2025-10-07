@@ -9,7 +9,7 @@ definePageMeta({
     <UContainer class="flex items-center justify-center py-8">
         <UCard
             class="w-full max-w-md"
-            variant="subtle"
+            variant="outline"
         >
             Dashboard - Logged in!
         </UCard>

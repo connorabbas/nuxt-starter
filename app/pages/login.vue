@@ -136,6 +136,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UButton
             label="Log in"
             type="submit"
+            class="w-full flex justify-center"
             :disabled="submitting"
             :loading="submitting"
         />

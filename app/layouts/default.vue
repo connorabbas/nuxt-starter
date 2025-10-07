@@ -2,14 +2,18 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 
 const items: NavigationMenuItem[] = [
-    {
+    /* {
         label: 'Sign in',
-        to: '/sign-in'
+        to: '/login'
     },
     {
-        label: 'Create account',
+        label: 'Sign up',
         to: '/sign-up'
-    }
+    },
+    {
+        label: 'Dashboard',
+        to: '/dashboard'
+    } */
 ]
 </script>
 
@@ -22,18 +26,61 @@ const items: NavigationMenuItem[] = [
                 </NuxtLink>
             </template>
 
-            <template #right>
-                <UNavigationMenu :items="items" />
+            <UNavigationMenu
+                :items="items"
+                variant="link"
+            />
 
+            <template #right>
                 <UColorModeButton />
 
                 <UButton
-                    to="https://github.com/nuxt-ui-templates/starter"
-                    target="_blank"
-                    icon="i-simple-icons-github"
-                    aria-label="GitHub"
+                    icon="i-lucide-log-in"
                     color="neutral"
                     variant="ghost"
+                    to="/login"
+                    class="lg:hidden"
+                />
+
+                <UButton
+                    label="Sign in"
+                    color="neutral"
+                    variant="outline"
+                    to="/login"
+                    class="hidden lg:inline-flex"
+                />
+
+                <UButton
+                    label="Sign up"
+                    color="neutral"
+                    trailing-icon="i-lucide-arrow-right"
+                    class="hidden lg:inline-flex"
+                    to="/sign-up"
+                />
+            </template>
+
+            <template #body>
+                <UNavigationMenu
+                    :items="items"
+                    orientation="vertical"
+                    class="-mx-2.5"
+                />
+
+                <USeparator class="my-6" />
+
+                <UButton
+                    label="Sign in"
+                    color="neutral"
+                    variant="subtle"
+                    to="/login"
+                    block
+                    class="mb-3"
+                />
+                <UButton
+                    label="Sign up"
+                    color="neutral"
+                    to="/sign-up"
+                    block
                 />
             </template>
         </UHeader>
