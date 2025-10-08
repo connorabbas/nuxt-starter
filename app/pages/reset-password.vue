@@ -8,12 +8,10 @@ definePageMeta({
     middleware: ['guest']
 })
 
-const config = useRuntimeConfig()
+const route = useRoute()
 const toast = useToast()
 
 const schema = z.object({
-    name: z.string('Name is required').min(5),
-    email: z.email('Invalid email format'),
     password: z.string('Password is required').min(8, 'Must be at least 8 characters'),
     confirmPassword: z.string('Please confirm your password')
 }).refine(data => data.password === data.confirmPassword, {
@@ -25,22 +23,19 @@ type Schema = z.output<typeof schema>
 
 const showPw = ref(false)
 const state = reactive<Partial<Schema>>({
-    name: undefined,
-    email: undefined,
     password: undefined,
     confirmPassword: undefined
 })
 
 const submitting = ref(false)
+const token = route.query.token as string // TODO: Error UI is no token in URL
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
     submitting.value = true
 
-    const { error } = await authClient.signUp.email({
-        name: event.data.name,
-        email: event.data.email,
-        password: event.data.password,
-        callbackURL: '/dashboard?welcome=true'
+    const { error } = await authClient.resetPassword({
+        newPassword: event.data.password,
+        token
     })
 
     if (error) {
@@ -50,18 +45,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         })
     } else {
         toast.add({
-            title: 'Successfully signed up',
+            title: 'Password successfully reset',
             color: 'success'
         })
-        state.name = undefined
-        state.email = undefined
         state.password = undefined
         state.confirmPassword = undefined
-        if (config.public.auth.mustVerifyEmail) {
-            navigateTo('/verify-email')
-        } else {
-            navigateTo('/dashboard')
-        }
+        navigateTo('/login')
     }
 
     submitting.value = false
@@ -76,40 +65,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         @submit="onSubmit"
     >
         <div class="flex flex-col text-center">
-            <div class="text-xl text-pretty font-semibold text-highlighted">Create an account</div>
+            <div class="text-xl text-pretty font-semibold text-highlighted">Reset password</div>
             <div class="mt-1 text-sm text-pretty text-muted">
-                Already have an account? <ULink
-                    to="/login"
-                    class="text-primary hover:underline"
-                >Sign in</ULink>.
+                Please enter your new password below
             </div>
         </div>
-
-        <UFormField
-            label="Name"
-            name="name"
-            required
-        >
-            <UInput
-                v-model="state.name"
-                placeholder="Enter your name"
-                class="w-full"
-            />
-        </UFormField>
-
-        <UFormField
-            label="Email"
-            name="email"
-            autocomplete="email"
-            required
-        >
-            <UInput
-                v-model="state.email"
-                type="email"
-                placeholder="Enter your email"
-                class="w-full"
-            />
-        </UFormField>
 
         <UFormField
             label="Password"
@@ -118,7 +78,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         >
             <UInput
                 v-model="state.password"
-                placeholder="Enter your password"
+                placeholder="Enter your new password"
                 class="w-full"
                 :type="showPw ? 'text' : 'password'"
                 :ui="{ trailing: 'pe-1' }"
@@ -146,13 +106,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <UInput
                 v-model="state.confirmPassword"
                 type="password"
-                placeholder="Confirm your password"
+                placeholder="Confirm your new password"
                 class="w-full"
             />
         </UFormField>
 
         <UButton
-            label="Submit"
+            label="Reset password"
             type="submit"
             class="w-full flex justify-center"
             :disabled="submitting"

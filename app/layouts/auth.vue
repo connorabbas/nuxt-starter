@@ -10,7 +10,7 @@
                 class="absolute left-8 top-8 rounded-full z-10"
             />
             <UPageCard
-                variant="outline"
+                variant="subtle"
                 class="max-w-md w-full"
             >
                 <slot />

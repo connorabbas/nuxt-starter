@@ -1,5 +1,25 @@
 <script setup lang="ts">
 import { authClient } from '~/lib/auth-client'
+import type { DropdownMenuItem } from '@nuxt/ui'
+
+const { data: session } = await authClient.useSession(useFetch)
+
+const items = ref<DropdownMenuItem[][]>([
+    [
+        {
+            label: 'Settings',
+            icon: 'i-lucide-settings',
+            to: '/settings'
+        }
+    ],
+    [
+        {
+            label: 'Logout',
+            icon: 'i-lucide-log-out',
+            onSelect: () => signOut()
+        }
+    ]
+])
 
 async function signOut() {
     await authClient.signOut({
@@ -24,13 +44,31 @@ async function signOut() {
             <template #right>
                 <UColorModeButton />
 
-                <UButton
+                <UDropdownMenu
+                    :items="items"
+                    :content="{
+                        align: 'end',
+                        side: 'bottom',
+                    }"
+                    :ui="{
+                        content: 'w-48'
+                    }"
+                >
+                    <UButton
+                        trailing-icon="i-lucide-chevron-down"
+                        color="neutral"
+                        variant="ghost"
+                        :label="session?.user.name"
+                    />
+                </UDropdownMenu>
+
+                <!-- <UButton
                     icon="i-lucide-log-out"
                     color="neutral"
                     variant="ghost"
                     label="Log out"
                     @click="signOut"
-                />
+                /> -->
             </template>
         </UHeader>
 

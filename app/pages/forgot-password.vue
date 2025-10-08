@@ -8,8 +8,8 @@ definePageMeta({
     middleware: ['guest']
 })
 
+const config = useRuntimeConfig()
 const toast = useToast()
-const route = useRoute()
 
 const schema = z.object({
     email: z.email('Invalid email format')
@@ -17,9 +17,8 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
-const presetEmail = route.query.email as string
 const state = reactive<Partial<Schema>>({
-    email: presetEmail || undefined
+    email: undefined
 })
 
 const submitting = ref(false)
@@ -27,9 +26,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
     submitting.value = true
 
-    const { error } = await authClient.sendVerificationEmail({
+    const { error } = await authClient.requestPasswordReset({
         email: event.data.email,
-        callbackURL: '/dashboard?welcome=true'
+        redirectTo: `${config.public.baseURL}/reset-password`
     })
 
     if (error) {
@@ -39,7 +38,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         })
     } else {
         toast.add({
-            title: 'Verification email has been resent',
+            title: 'We have emailed your password reset link',
             color: 'success'
         })
     }
@@ -56,23 +55,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         @submit="onSubmit"
     >
         <div class="flex flex-col gap-4 text-center">
-            <div class="text-xl text-pretty font-semibold text-highlighted">Please verify your email</div>
+            <div class="text-xl text-pretty font-semibold text-highlighted">Forgot password</div>
             <div class="space-y-4 text-sm text-pretty text-muted">
                 <div>
-                    Almost there, we sent you an email to verify your email address. Just click the link in that email
-                    to complete the signup and login to your account.
-                </div>
-                <div>
-                    You may need to <span class="font-bold">check your spam folder</span>.
-                </div>
-                <div>
-                    Still can't find the email?
+                    Enter your email address to receive a password reset link
                 </div>
             </div>
         </div>
 
         <UFormField
-            v-if="!presetEmail"
             label="Email"
             name="email"
             autocomplete="email"
@@ -87,7 +78,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         </UFormField>
 
         <UButton
-            label="Resend verification email"
+            label="Email password reset link"
             type="submit"
             class="w-full flex justify-center"
             :disabled="submitting"

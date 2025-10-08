@@ -22,18 +22,18 @@ services:
   pgsql:
     image: 'postgres:17'
     ports:
-      - '${DB_FORWARD_PORT:-5432}:5432'
+      - '${NUXT_DB_FORWARD_PORT:-5432}:5432'
     environment:
-      PGPASSWORD: '${DB_PASSWORD:-secret}'
-      POSTGRES_DB: '${DB_DATABASE}'
-      POSTGRES_USER: '${DB_USERNAME}'
-      POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+      PGPASSWORD: '${NUXT_DB_PASSWORD:-secret}'
+      POSTGRES_DB: '${NUXT_DB_DATABASE}'
+      POSTGRES_USER: '${NUXT_DB_USERNAME}'
+      POSTGRES_PASSWORD: '${NUXT_DB_PASSWORD:-secret}'
     volumes:
       - 'postgres-data:/var/lib/postgresql/data'
     networks:
       - web
     healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}" ]
+      test: [ "CMD", "pg_isready", "-q", "-d", "${NUXT_DB_DATABASE}", "-U", "${NUXT_DB_USERNAME}" ]
       retries: 3
       timeout: 5s
 

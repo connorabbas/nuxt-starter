@@ -45,7 +45,7 @@ const items: NavigationMenuItem[] = [
                 <UButton
                     label="Sign in"
                     color="neutral"
-                    variant="outline"
+                    variant="subtle"
                     to="/login"
                     class="hidden lg:inline-flex"
                 />

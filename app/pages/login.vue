@@ -60,7 +60,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     <UForm
         :schema="schema"
         :state="state"
-        class="space-y-4"
+        class="space-y-6"
         @submit="onSubmit"
     >
         <div class="flex flex-col text-center">
@@ -102,6 +102,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             autocomplete="current-password"
             required
         >
+            <template #hint>
+                <ULink
+                    to="/forgot-password"
+                    class="text-primary hover:underline"
+                >
+                    Forgot your password?
+                </ULink>
+            </template>
             <UInput
                 v-model="state.password"
                 placeholder="Enter your password"

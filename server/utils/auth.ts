@@ -1,10 +1,11 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { runtimeConfig } from './config'
 import { sendMail } from './mailer'
 import { render } from '@vue-email/render'
 import WelcomeEmail from '~~/server/mail/templates/vue/auth/VerifyEmail.vue'
+import ResetPwEmail from '~~/server/mail/templates/vue/auth/ResetPassword.vue'
 
+const runtimeConfig = useRuntimeConfig()
 export const auth = betterAuth({
     appName: runtimeConfig.public.appName,
     baseURL: runtimeConfig.public.baseURL,
@@ -17,7 +18,21 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: runtimeConfig.public.auth.mustVerifyEmail,
-        revokeSessionsOnPasswordReset: true
+        revokeSessionsOnPasswordReset: true,
+        sendResetPassword: async ({ user, url }) => {
+            const subject = 'Reset your password'
+            const html = await render(ResetPwEmail, {
+                subject,
+                name: user.name,
+                actionUrl: url
+            }, { pretty: true })
+
+            await sendMail({
+                to: user.email,
+                subject,
+                html
+            })
+        }
     },
     emailVerification: {
         sendOnSignUp: true,
