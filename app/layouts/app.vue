@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { authClient } from '~/lib/auth-client'
-import type { DropdownMenuItem } from '@nuxt/ui'
+import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 
 const { data: session } = await authClient.useSession(useFetch)
 
-const items = ref<DropdownMenuItem[][]>([
+const navMenuItems: NavigationMenuItem[] = [
+    {
+        label: 'Dashboard',
+        to: '/dashboard'
+    }
+]
+const userDropdownItems = ref<DropdownMenuItem[][]>([
     [
         {
             label: 'Settings',
@@ -41,11 +47,16 @@ async function signOut() {
                 </NuxtLink>
             </template>
 
+            <UNavigationMenu
+                :items="navMenuItems"
+                variant="link"
+            />
+
             <template #right>
                 <UColorModeButton />
 
                 <UDropdownMenu
-                    :items="items"
+                    :items="userDropdownItems"
                     :content="{
                         align: 'end',
                         side: 'bottom',
