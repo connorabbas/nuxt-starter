@@ -18,6 +18,7 @@
         "@iconify-json/lucide": "^1.2.68",
         "@iconify-json/simple-icons": "^1.2.53",
         "@nuxt/ui": "^4.0.0",
+        "@pinia/nuxt": "^0.11.2",
         "@vitejs/plugin-vue": "^6.0.1",
         "@vue-email/components": "^0.0.21",
         "@vue-email/html": "^0.0.3",
@@ -31,6 +32,7 @@
         "nuxt": "^4.1.2",
         "nuxt-csurf": "^1.6.5",
         "pg": "^8.16.3",
+        "pinia": "^3.0.3",
         "vue-email": "^0.8.11",
         "winston": "^3.18.3",
         "zod": "^4.1.11"

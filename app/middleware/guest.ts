@@ -1,8 +1,6 @@
-import { authClient } from '~/lib/auth-client'
-
 export default defineNuxtRouteMiddleware(async () => {
-    const { data: session } = await authClient.useSession(useFetch)
-    if (session.value) {
+    const authStore = useAuthStore()
+    if (authStore.isAuthenticated) {
         return navigateTo(useRuntimeConfig().public.auth.redirectUserTo)
     }
 })
