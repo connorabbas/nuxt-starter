@@ -11,8 +11,12 @@ export default defineNuxtRouteMiddleware(async () => {
         return navigateTo(runtimeConfig.public.auth.redirectGuestTo)
     }
 
-    // Or manually check the session for each navigation
-    /* const { data: session } = await useFetch('/api/app/user-session')
+    // Or manually re-check the session for each navigation
+    /* const session = await authClient.getSession({
+        query: {
+            disableCookieCache: true
+        }
+    })
     if (!session) {
         return navigateTo(runtimeConfig.public.auth.redirectGuestTo)
     } */
