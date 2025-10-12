@@ -46,12 +46,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (error) {
         toast.add({
             title: error.message || error.statusText,
-            color: 'error'
+            color: 'error',
+            icon: 'i-lucide-circle-x'
         })
     } else {
         toast.add({
             title: 'Successfully signed up',
-            color: 'success'
+            color: 'success',
+            icon: 'i-lucide-circle-check-big'
         })
         state.name = undefined
         state.email = undefined
