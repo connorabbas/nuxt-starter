@@ -1,12 +1,7 @@
-/* export default defineNuxtPlugin({
-    name: 'better-auth-fetch-plugin',
-    enforce: 'pre',
-    async setup(nuxtApp) {
-        // Flag if request is cached
-        nuxtApp.payload.isCached = Boolean(useRequestEvent()?.context.cache)
-        if (nuxtApp.payload.serverRendered && !nuxtApp.payload.prerenderedAt && !nuxtApp.payload.isCached) {
-            const authStore = useAuthStore()
-            await authStore.fetchSession()
-        }
-    }
-}) */
+export default defineNuxtPlugin(async (nuxtApp) => {
+    const authStore = useAuthStore()
+    await authStore.fetchSession()
+
+    // Mark that we fetched on server
+    nuxtApp.payload.authFetched = true
+})
