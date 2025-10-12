@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
         if (!session) {
             throw createError({
                 statusCode: 401,
-                statusMessage: 'Unauthorized / Invalid User Session.'
+                statusMessage: 'Invalid User Session, please log back in.'
             })
         }
 
