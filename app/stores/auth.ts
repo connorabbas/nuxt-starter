@@ -45,6 +45,11 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    const invalidateSession = () => {
+        session.value = null
+        isHydrated.value = false
+    }
+
     const signOut = async () => {
         await authClient.signOut({
             fetchOptions: {
@@ -53,8 +58,7 @@ export const useAuthStore = defineStore('auth', () => {
                 }
             }
         })
-        session.value = null
-        isHydrated.value = false
+        invalidateSession()
     }
 
     return {
@@ -65,6 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
         fetchSession,
         fetchFreshSession,
         ensureSession,
+        invalidateSession,
         signOut
     }
 })

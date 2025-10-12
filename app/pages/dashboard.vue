@@ -4,12 +4,7 @@ definePageMeta({
     middleware: ['auth']
 })
 
-// TODO: abstract redirect logic to ofetch configuration within plugin/module
-// /login redirect won't work here because of session cookie cache within the guest middleware: https://www.better-auth.com/docs/concepts/session-management#cookie-cache
-/* const { data, error } = await useFetch('/api/app/user-session')
-if (error.value?.statusCode === 401) {
-    await navigateTo('/login')
-} */
+const { data, execute, error } = await useFetch('/api/app/user-session', { immediate: false })
 </script>
 
 <template>
@@ -19,9 +14,20 @@ if (error.value?.statusCode === 401) {
             variant="subtle"
         >
             Dashboard - Logged in!
-            <!-- <div>
+            <UButton
+                label="test"
+                @click="execute()"
+            />
+            <UAlert
+                v-if="error"
+                color="error"
+                variant="subtle"
+            >
+                {{ error }}
+            </UAlert>
+            <div>
                 <pre>{{ data }}</pre>
-            </div> -->
+            </div>
         </UCard>
     </UContainer>
 </template>

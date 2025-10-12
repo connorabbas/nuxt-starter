@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import * as z from 'zod'
+import z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { authClient } from '~/lib/auth-client'
 
@@ -23,7 +23,7 @@ const showPw = ref(false)
 const state = reactive<Partial<Schema>>({
     email: undefined,
     password: undefined,
-    rememberMe: undefined
+    rememberMe: true
 })
 
 const serverError = ref('')
