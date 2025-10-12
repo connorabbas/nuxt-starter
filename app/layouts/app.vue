@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { authClient } from '~/lib/auth-client'
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 
-const { data: session } = await authClient.useSession(useFetch)
+const authStore = useAuthStore()
 
 const navMenuItems: NavigationMenuItem[] = [
     {
@@ -22,20 +21,10 @@ const userDropdownItems = ref<DropdownMenuItem[][]>([
         {
             label: 'Logout',
             icon: 'i-lucide-log-out',
-            onSelect: () => signOut()
+            onSelect: () => authStore.signOut()
         }
     ]
 ])
-
-async function signOut() {
-    await authClient.signOut({
-        fetchOptions: {
-            onSuccess: () => {
-                navigateTo('/')
-            }
-        }
-    })
-}
 </script>
 
 <template>
@@ -56,6 +45,7 @@ async function signOut() {
                 <UColorModeButton />
 
                 <UDropdownMenu
+                    v-if="authStore.isAuthenticated"
                     :items="userDropdownItems"
                     :content="{
                         align: 'end',
@@ -69,7 +59,7 @@ async function signOut() {
                         trailing-icon="i-lucide-chevron-down"
                         color="neutral"
                         variant="ghost"
-                        :label="session?.user.name"
+                        :label="authStore?.user?.name"
                     />
                 </UDropdownMenu>
 
