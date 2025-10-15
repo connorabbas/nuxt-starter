@@ -18,7 +18,7 @@ const items: NavigationMenuItem[] = [
 </script>
 
 <template>
-    <UApp>
+    <div>
         <UHeader>
             <template #left>
                 <NuxtLink to="/">
@@ -109,5 +109,5 @@ const items: NavigationMenuItem[] = [
                 />
             </template>
         </UFooter>
-    </UApp>
+    </div>
 </template>

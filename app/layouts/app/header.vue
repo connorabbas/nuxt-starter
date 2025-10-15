@@ -28,7 +28,7 @@ const userDropdownItems = ref<DropdownMenuItem[][]>([
 </script>
 
 <template>
-    <UApp>
+    <div>
         <UHeader>
             <template #left>
                 <NuxtLink to="/">
@@ -97,5 +97,5 @@ const userDropdownItems = ref<DropdownMenuItem[][]>([
                 />
             </template>
         </UFooter>
-    </UApp>
+    </div>
 </template>

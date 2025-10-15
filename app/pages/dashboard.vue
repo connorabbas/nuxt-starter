@@ -1,7 +1,8 @@
 <script setup lang="ts">
 definePageMeta({
     layout: 'app',
-    middleware: ['auth']
+    middleware: ['auth'],
+    pageTitle: 'Dashboard'
 })
 
 // TODO: welcome url query param, show success alert
