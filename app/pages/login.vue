@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
 import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
@@ -10,6 +10,33 @@ definePageMeta({
 
 const config = useRuntimeConfig()
 const route = useRoute()
+const toast = useToast()
+
+const fields: AuthFormField[] = [{
+    name: 'email',
+    type: 'email',
+    label: 'Email',
+    placeholder: 'Enter your email',
+    required: true
+}, {
+    name: 'password',
+    label: 'Password',
+    type: 'password',
+    placeholder: 'Enter your password',
+    required: true
+}, {
+    name: 'remember',
+    label: 'Remember me',
+    type: 'checkbox'
+}]
+
+const providers = [{
+    label: 'GitHub',
+    icon: 'i-simple-icons-github',
+    onClick: () => {
+        toast.add({ title: 'GitHub', description: 'TODO: Login with GitHub' })
+    }
+}]
 
 const schema = z.object({
     email: z.email('Invalid email format'),
@@ -18,13 +45,6 @@ const schema = z.object({
 })
 
 type Schema = z.output<typeof schema>
-
-const showPw = ref(false)
-const state = reactive<Partial<Schema>>({
-    email: undefined,
-    password: undefined,
-    rememberMe: true
-})
 
 const serverError = ref('')
 const submitting = ref(false)
@@ -57,103 +77,37 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-    <UForm
+    <UAuthForm
         :schema="schema"
-        :state="state"
-        class="space-y-6"
+        :fields="fields"
+        :providers="providers"
+        :loading="submitting"
+        title="Welcome back!"
+        icon="i-lucide-lock"
         @submit="onSubmit"
     >
-        <div class="flex flex-col text-center">
-            <div class="text-xl text-pretty font-semibold text-highlighted">Welcome back</div>
-            <div class="mt-1 text-sm text-pretty text-muted">
-                Don't have an account? <ULink
-                    to="/sign-up"
-                    class="text-primary hover:underline"
-                >Sign up</ULink>.
-            </div>
-        </div>
-
-        <UAlert
-            v-if="serverError"
-            color="error"
-            variant="subtle"
-            title="Error"
-            :description="serverError"
-            icon="i-lucide-circle-x"
-        />
-
-        <UFormField
-            label="Email"
-            name="email"
-            autocomplete="email"
-            required
-        >
-            <UInput
-                v-model="state.email"
-                type="email"
-                placeholder="Enter your email"
-                class="w-full"
+        <template #description>
+            Don't have an account? <ULink
+                to="/sign-up"
+                class="text-primary font-medium"
+            >Sign up</ULink>.
+        </template>
+        <template #password-hint>
+            <ULink
+                to="/forgot-password"
+                class="text-primary font-medium"
+                tabindex="-1"
+            >Forgot password?</ULink>
+        </template>
+        <template #validation>
+            <UAlert
+                v-if="serverError"
+                color="error"
+                variant="subtle"
+                title="Error"
+                :description="serverError"
+                icon="i-lucide-circle-x"
             />
-        </UFormField>
-
-        <UFormField
-            label="Password"
-            name="password"
-            autocomplete="current-password"
-            required
-        >
-            <template #hint>
-                <ULink
-                    to="/forgot-password"
-                    class="text-primary hover:underline"
-                >
-                    Forgot your password?
-                </ULink>
-            </template>
-            <UInput
-                v-model="state.password"
-                placeholder="Enter your password"
-                class="w-full"
-                :type="showPw ? 'text' : 'password'"
-                :ui="{ trailing: 'pe-1' }"
-            >
-                <template #trailing>
-                    <UButton
-                        color="neutral"
-                        variant="link"
-                        size="sm"
-                        :icon="showPw ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                        :aria-label="showPw ? 'Hide password' : 'Show password'"
-                        :aria-pressed="showPw"
-                        aria-controls="password"
-                        @click="showPw = !showPw"
-                    />
-                </template>
-            </UInput>
-        </UFormField>
-
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-            <UFormField name="rememberMe">
-                <UCheckbox
-                    v-model="state.rememberMe"
-                    label="Remember me"
-                />
-            </UFormField>
-        </div>
-
-        <UButton
-            label="Log in"
-            type="submit"
-            class="w-full flex justify-center"
-            :disabled="submitting"
-            :loading="submitting"
-        />
-    </UForm>
+        </template>
+    </UAuthForm>
 </template>
-
-<style>
-/* Hide the password reveal button in Edge */
-::-ms-reveal {
-    display: none;
-}
-</style>

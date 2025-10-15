@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui'
 import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
@@ -10,6 +10,32 @@ definePageMeta({
 
 const config = useRuntimeConfig()
 const toast = useToast()
+
+const fields: AuthFormField[] = [{
+    name: 'name',
+    type: 'text',
+    label: 'Name',
+    placeholder: 'Enter your name',
+    required: true
+}, {
+    name: 'email',
+    type: 'email',
+    label: 'Email',
+    placeholder: 'Enter your email',
+    required: true
+}, {
+    name: 'password',
+    label: 'Password',
+    type: 'password',
+    placeholder: 'Enter your password',
+    required: true
+}, {
+    name: 'confirmPassword',
+    label: 'Confirm Password',
+    type: 'password',
+    placeholder: 'Confirm your password',
+    required: true
+}]
 
 const schema = z.object({
     name: z.string('Name is required').min(5),
@@ -23,14 +49,7 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
-const showPw = ref(false)
-const state = reactive<Partial<Schema>>({
-    name: undefined,
-    email: undefined,
-    password: undefined,
-    confirmPassword: undefined
-})
-
+const serverError = ref('')
 const submitting = ref(false)
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
@@ -44,23 +63,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     })
 
     if (error) {
-        toast.add({
-            title: error.message || error.statusText,
-            color: 'error',
-            icon: 'i-lucide-circle-x'
-        })
+        serverError.value = error.message || error.statusText
     } else {
         toast.add({
             title: 'Successfully signed up',
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })
-        state.name = undefined
-        state.email = undefined
-        state.password = undefined
-        state.confirmPassword = undefined
         if (config.public.auth.mustVerifyEmail) {
-            navigateTo('/verify-email')
+            navigateTo({ name: 'verify-email', query: { email: event.data.email } })
         } else {
             navigateTo('/dashboard')
         }
@@ -71,101 +82,32 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-    <UForm
+    <UAuthForm
         :schema="schema"
-        :state="state"
-        class="space-y-6"
+        :fields="fields"
+        :loading="submitting"
+        :submit="{
+            label: 'Submit'
+        }"
+        title="Create an account"
+        icon="i-lucide-user-plus"
         @submit="onSubmit"
     >
-        <div class="flex flex-col text-center">
-            <div class="text-xl text-pretty font-semibold text-highlighted">Create an account</div>
-            <div class="mt-1 text-sm text-pretty text-muted">
-                Already have an account? <ULink
-                    to="/login"
-                    class="text-primary hover:underline"
-                >Sign in</ULink>.
-            </div>
-        </div>
-
-        <UFormField
-            label="Name"
-            name="name"
-            required
-        >
-            <UInput
-                v-model="state.name"
-                placeholder="Enter your name"
-                class="w-full"
+        <template #description>
+            Already have an account? <ULink
+                to="/login"
+                class="text-primary font-medium"
+            >Sign in</ULink>.
+        </template>
+        <template #validation>
+            <UAlert
+                v-if="serverError"
+                color="error"
+                variant="subtle"
+                title="Error"
+                :description="serverError"
+                icon="i-lucide-circle-x"
             />
-        </UFormField>
-
-        <UFormField
-            label="Email"
-            name="email"
-            autocomplete="email"
-            required
-        >
-            <UInput
-                v-model="state.email"
-                type="email"
-                placeholder="Enter your email"
-                class="w-full"
-            />
-        </UFormField>
-
-        <UFormField
-            label="Password"
-            name="password"
-            required
-        >
-            <UInput
-                v-model="state.password"
-                placeholder="Enter your password"
-                class="w-full"
-                :type="showPw ? 'text' : 'password'"
-                :ui="{ trailing: 'pe-1' }"
-            >
-                <template #trailing>
-                    <UButton
-                        color="neutral"
-                        variant="link"
-                        size="sm"
-                        :icon="showPw ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                        :aria-label="showPw ? 'Hide password' : 'Show password'"
-                        :aria-pressed="showPw"
-                        aria-controls="password"
-                        @click="showPw = !showPw"
-                    />
-                </template>
-            </UInput>
-        </UFormField>
-
-        <UFormField
-            label="Confirm Password"
-            name="confirmPassword"
-            required
-        >
-            <UInput
-                v-model="state.confirmPassword"
-                type="password"
-                placeholder="Confirm your password"
-                class="w-full"
-            />
-        </UFormField>
-
-        <UButton
-            label="Submit"
-            type="submit"
-            class="w-full flex justify-center"
-            :disabled="submitting"
-            :loading="submitting"
-        />
-    </UForm>
+        </template>
+    </UAuthForm>
 </template>
-
-<style>
-/* Hide the password reveal button in Edge */
-::-ms-reveal {
-    display: none;
-}
-</style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui'
 import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
@@ -11,16 +11,21 @@ definePageMeta({
 const config = useRuntimeConfig()
 const toast = useToast()
 
+const fields: AuthFormField[] = [{
+    name: 'email',
+    type: 'email',
+    label: 'Email',
+    placeholder: 'Enter your email',
+    required: true
+}]
+
 const schema = z.object({
     email: z.email('Invalid email format')
 })
 
 type Schema = z.output<typeof schema>
 
-const state = reactive<Partial<Schema>>({
-    email: undefined
-})
-
+const serverError = ref('')
 const submitting = ref(false)
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
@@ -32,11 +37,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     })
 
     if (error) {
-        toast.add({
-            title: error.message || error.statusText,
-            color: 'error',
-            icon: 'i-lucide-circle-x'
-        })
+        serverError.value = error.message || error.statusText
     } else {
         toast.add({
             title: 'We have emailed your password reset link',
@@ -50,41 +51,29 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-    <UForm
+    <UAuthForm
         :schema="schema"
-        :state="state"
-        class="space-y-6"
+        :fields="fields"
+        :loading="submitting"
+        :submit="{
+            label: 'Email password reset link'
+        }"
+        title="Forgot password"
+        icon="i-lucide-shield-question-mark"
         @submit="onSubmit"
     >
-        <div class="flex flex-col gap-4 text-center">
-            <div class="text-xl text-pretty font-semibold text-highlighted">Forgot password</div>
-            <div class="space-y-4 text-sm text-pretty text-muted">
-                <div>
-                    Enter your email address to receive a password reset link
-                </div>
-            </div>
-        </div>
-
-        <UFormField
-            label="Email"
-            name="email"
-            autocomplete="email"
-            required
-        >
-            <UInput
-                v-model="state.email"
-                type="email"
-                placeholder="Enter your email to resend verification link"
-                class="w-full"
+        <template #description>
+            Enter your email address to receive a password reset link
+        </template>
+        <template #validation>
+            <UAlert
+                v-if="serverError"
+                color="error"
+                variant="subtle"
+                title="Error"
+                :description="serverError"
+                icon="i-lucide-circle-x"
             />
-        </UFormField>
-
-        <UButton
-            label="Email password reset link"
-            type="submit"
-            class="w-full flex justify-center"
-            :disabled="submitting"
-            :loading="submitting"
-        />
-    </UForm>
+        </template>
+    </UAuthForm>
 </template>
