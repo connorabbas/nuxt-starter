@@ -2,7 +2,7 @@ import { ofetch } from 'ofetch'
 import type { Pinia } from 'pinia'
 
 export default defineNuxtPlugin({
-    name: 'fetch-interceptor',
+    name: 'fetch-config',
     enforce: 'default',
     parallel: true,
     async setup(nuxtApp) {

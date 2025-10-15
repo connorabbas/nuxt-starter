@@ -4,6 +4,8 @@ definePageMeta({
     middleware: ['auth']
 })
 
+// TODO: welcome url query param, show success alert
+
 const { data, execute, error } = await useFetch('/api/app/user-session', { immediate: false })
 </script>
 
