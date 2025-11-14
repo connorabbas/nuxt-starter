@@ -27,7 +27,8 @@ const fields: AuthFormField[] = [{
 }, {
     name: 'remember',
     label: 'Remember me',
-    type: 'checkbox'
+    type: 'checkbox',
+    defaultValue: true
 }]
 
 const providers = [{
