@@ -16,6 +16,10 @@ const links = [[{
     onSelect: () => {
         open.value = false
     }
+}, {
+    label: 'Dashboard',
+    icon: 'i-lucide-layout-dashboard',
+    to: '/dashboard'
 }], [{
     label: 'Feedback',
     icon: 'i-lucide-message-circle',
