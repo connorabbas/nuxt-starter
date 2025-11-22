@@ -31,13 +31,14 @@ const fields: AuthFormField[] = [{
     defaultValue: true
 }]
 
-const providers = [{
+// TODO: GitHub Auth
+/* const providers = [{
     label: 'GitHub',
     icon: 'i-simple-icons-github',
     onClick: () => {
         toast.add({ title: 'GitHub', description: 'TODO: Login with GitHub' })
     }
-}]
+}] */
 
 const schema = z.object({
     email: z.email('Invalid email format'),
@@ -81,7 +82,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     <UAuthForm
         :schema="schema"
         :fields="fields"
-        :providers="providers"
+        :providers="[]"
         :loading="submitting"
         title="Welcome back!"
         icon="i-lucide-lock"
