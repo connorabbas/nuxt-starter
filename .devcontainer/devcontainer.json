@@ -1,6 +1,6 @@
 // https://aka.ms/devcontainer.json
 {
-    "name": "Nuxt Auth Starter",
+    "name": "Nuxt Starter",
     "dockerComposeFile": [
         "../docker-compose.dev.yml"
     ],

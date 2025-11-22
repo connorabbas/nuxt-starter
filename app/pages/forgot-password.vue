@@ -31,7 +31,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
     submitting.value = true
 
-    const { error } = await authClient.requestPasswordReset({
+    const { data, error } = await authClient.requestPasswordReset({
         email: event.data.email,
         redirectTo: `${config.public.baseURL}/reset-password`
     })
@@ -40,7 +40,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         serverError.value = error.message || error.statusText
     } else {
         toast.add({
-            title: 'We have emailed your password reset link',
+            title: data?.message ?? 'We have emailed your password reset link',
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })

@@ -85,7 +85,7 @@ onMounted(async () => {
             :ui="{ footer: 'lg:border-t lg:border-default' }"
         >
             <template #header>
-                Nuxt Auth Starter
+                Nuxt Starter
             </template>
 
             <template #default="{ collapsed }">

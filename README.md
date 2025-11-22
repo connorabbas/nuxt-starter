@@ -20,3 +20,12 @@ A starter kit for getting up and running with a full-stack Nuxt application.
 -   [Drizzle ORM](https://orm.drizzle.team/)
 -   [Vue Email](https://vuemail.net/)
 -   [Winston Logger](https://github.com/winstonjs/winston)
+
+### Setup
+
+Generate/Migrate DB tables:
+
+```shell
+npm run db:generate
+npm run db:migrate
+```

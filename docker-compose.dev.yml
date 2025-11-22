@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: nuxt-auth-starter
+    container_name: nuxt-starter
     entrypoint: /bin/sh
     working_dir: /workspace
     volumes:
@@ -11,8 +11,8 @@ services:
     tty: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nuxt-auth-starter.rule=Host(`nuxt-auth-starter.localhost`)"
-      - "traefik.http.services.nuxt-auth-starter.loadbalancer.server.port=${NUXT_APP_PORT:-3000}"
+      - "traefik.http.routers.nuxt-starter.rule=Host(`nuxt-starter.localhost`)"
+      - "traefik.http.services.nuxt-starter.loadbalancer.server.port=${NUXT_APP_PORT:-3000}"
     networks:
       - web
       - proxy
@@ -42,6 +42,6 @@ volumes:
 
 networks:
   web:
-  proxy: # setup in separate container
+  proxy: # setup in separate compose file
     name: "traefik_network"
     external: true
