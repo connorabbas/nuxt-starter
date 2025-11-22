@@ -1,19 +1,5 @@
 <script setup lang="ts">
 import {
-    Body as MBody,
-    Button as MButton,
-    Container as MContainer,
-    Head as MHead,
-    Heading as MHeading,
-    Hr as MHr,
-    Html as MHtml,
-    Link as MLink,
-    Preview as MPreview,
-    Section as MSection,
-    Text as MText
-} from '@vue-email/components'
-
-import {
     components,
     presets,
     textColor,
@@ -23,7 +9,7 @@ import {
     py,
     mb,
     margin
-} from '~~/server/mail/styles'
+} from '../styles'
 
 const props = defineProps<{
     subject: string
@@ -36,82 +22,82 @@ const currentYear = new Date().getFullYear()
 </script>
 
 <template>
-    <MHtml>
-        <MHead />
-        <MPreview>{{ props.subject }}</MPreview>
+    <EHtml>
+        <EHead />
+        <EPreview>{{ props.subject }}</EPreview>
 
-        <MBody :style="components.body">
+        <EBody :style="components.body">
             <!-- Header -->
-            <MContainer :style="presets.sectionHeader">
-                <MHeading
+            <EContainer :style="presets.sectionHeader">
+                <EHeading
                     :style="presets.heading"
                     as="h1"
                 >
                     {{ config.public.appName }}
-                </MHeading>
-            </MContainer>
+                </EHeading>
+            </EContainer>
 
             <!-- Main Content Card -->
-            <MContainer :style="components.card">
+            <EContainer :style="components.card">
                 <!-- Subheading slot -->
-                <MHeading
+                <EHeading
                     :style="presets.subheading"
                     as="h2"
                 >
                     <slot name="subheading" />
-                </MHeading>
+                </EHeading>
 
-                <MSection>
+                <ESection>
                     <!-- Body slot -->
-                    <MText :style="presets.body">
+                    <EText :style="presets.body">
                         <slot name="body" />
-                    </MText>
+                    </EText>
 
                     <!-- Optional call to link/action button -->
                     <div
                         v-if="props.actionText && props.actionUrl"
                         :style="cn(textAlign.center, py[6])"
                     >
-                        <MButton
+                        <EButton
                             :href="props.actionUrl"
                             :style="presets.buttonPrimary"
                         >
                             {{ props.actionText }}
-                        </MButton>
+                        </EButton>
                     </div>
-                </MSection>
+                </ESection>
 
                 <!-- Ending remarks -->
-                <MText :style="cn(text.sm, textColor.secondary, mb[4])">
+                <EText :style="cn(text.sm, textColor.secondary, mb[4])">
                     <slot name="remarks" />
-                </MText>
+                </EText>
 
                 <!-- Link trouble -->
                 <template v-if="props.actionText && props.actionUrl">
-                    <MHr :style="components.divider" />
+                    <EHr :style="components.divider" />
 
-                    <MText :style="cn(text.xs, textColor.muted, mb[1])">
+                    <EText :style="cn(text.xs, textColor.muted, mb[1])">
                         If you're having trouble clicking the "{{ props.actionText }}" button,
                         copy and paste the URL below into your web browser:
-                    </MText>
+                    </EText>
 
-                    <MText :style="cn(text.xs, textColor.muted, components.breakWord, margin[0])">
-                        <MLink
+                    <EText :style="cn(text.xs, textColor.muted, components.breakWord, margin[0])">
+                        <ELink
                             :href="props.actionUrl"
                             :style="cn(components.link, text.xs)"
                         >
                             {{ props.actionUrl }}
-                        </MLink>
-                    </MText>
+                        </ELink>
+                    </EText>
                 </template>
-            </MContainer>
+            </EContainer>
 
             <!-- Footer -->
-            <MContainer :style="presets.sectionFooter">
-                <MText :style="presets.footerText">
+            <EContainer :style="presets.sectionFooter">
+                <EText :style="presets.footerText">
                     © {{ currentYear }} {{ config.public.appName }}. All rights reserved.
-                </MText>
-            </MContainer>
-        </MBody>
-    </MHtml>
+                </EText>
+            </EContainer>
+        </EBody>
+    </EHtml>
 </template>

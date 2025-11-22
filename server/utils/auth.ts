@@ -1,9 +1,8 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { sendMail } from './mailer'
-import { render } from '@vue-email/render'
-import WelcomeEmail from '~~/server/mail/templates/vue/auth/VerifyEmail.vue'
-import ResetPwEmail from '~~/server/mail/templates/vue/auth/ResetPassword.vue'
+import WelcomeEmail from '~/emails/auth/VerifyEmail.vue'
+import ResetPwEmail from '~/emails/auth/ResetPassword.vue'
 
 const runtimeConfig = useRuntimeConfig()
 export const auth = betterAuth({
@@ -21,7 +20,7 @@ export const auth = betterAuth({
         revokeSessionsOnPasswordReset: true,
         sendResetPassword: async ({ user, url }) => {
             const subject = 'Reset your password'
-            const html = await render(ResetPwEmail, {
+            const html = await renderEmailComponent(ResetPwEmail, {
                 subject,
                 name: user.name,
                 actionUrl: url
@@ -39,7 +38,7 @@ export const auth = betterAuth({
         autoSignInAfterVerification: true,
         sendVerificationEmail: async ({ user, url }) => {
             const subject = 'Verify your email address'
-            const html = await render(WelcomeEmail, {
+            const html = await renderEmailComponent(WelcomeEmail, {
                 subject,
                 name: user.name,
                 actionUrl: url

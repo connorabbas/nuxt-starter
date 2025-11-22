@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Transactional from '../Transactional.vue'
+import Transactional from '../layouts/Transactional.vue'
 
 const props = defineProps<{
     subject: string
