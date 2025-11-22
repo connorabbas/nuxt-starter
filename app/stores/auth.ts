@@ -1,3 +1,4 @@
+import type { User } from 'better-auth'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authClient } from '~/lib/auth-client'
@@ -10,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
     const session = ref<UseSessionReturn | GetSessionReturn | null>(null)
     const isHydrated = ref(false)
 
-    const user = computed(() => session.value?.data?.user)
+    const user = computed<User | null>(() => session.value?.data?.user)
     const loading = computed(() => session.value?.isPending ?? false)
     const isAuthenticated = computed(() => !!session.value?.data?.session)
 
