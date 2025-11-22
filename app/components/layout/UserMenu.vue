@@ -14,7 +14,8 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     to: '/settings'
 }], [{
     label: 'Log out',
-    icon: 'i-lucide-log-out'
+    icon: 'i-lucide-log-out',
+    onSelect: () => authStore.signOut()
 }]]))
 </script>
 
