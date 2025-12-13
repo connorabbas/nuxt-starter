@@ -2,8 +2,8 @@ import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { sendMail } from './mailer'
 import { render } from '@vue-email/render'
-import WelcomeEmail from '~~/server/mail/templates/vue/auth/VerifyEmail.vue'
-import ResetPwEmail from '~~/server/mail/templates/vue/auth/ResetPassword.vue'
+import WelcomeEmail from '~/mail/auth/VerifyEmail.vue'
+import ResetPwEmail from '~/mail/auth/ResetPassword.vue'
 
 const runtimeConfig = useRuntimeConfig()
 export const auth = betterAuth({

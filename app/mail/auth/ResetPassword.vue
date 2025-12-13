@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Transactional from '../Transactional.vue'
-import { cn, mb, text, textColor } from '~~/server/mail/styles'
+import { cn, mb, text, textColor } from '~/mail/styles'
 
 const props = defineProps<{
     subject: string

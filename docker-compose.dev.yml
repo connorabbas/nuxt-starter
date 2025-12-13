@@ -4,7 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     container_name: nuxt-starter
-    entrypoint: /bin/sh
+    hostname: nuxt-starter
+    entrypoint: /bin/bash
     working_dir: /workspace
     volumes:
       - '.:/workspace'

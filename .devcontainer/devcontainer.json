@@ -26,7 +26,7 @@
                 "pmneo.tsimporter"
             ],
             "settings": {
-                "terminal.integrated.shell.linux": "/bin/sh",
+                "terminal.integrated.shell.linux": "/bin/bash",
                 "html.format.wrapAttributes": "force-expand-multiline",
                 "[vue]": {
                     "editor.defaultFormatter": "Vue.volar",

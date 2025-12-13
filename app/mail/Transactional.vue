@@ -23,7 +23,7 @@ import {
     py,
     mb,
     margin
-} from '~~/server/mail/styles'
+} from '~/mail/styles'
 
 const props = defineProps<{
     subject: string
