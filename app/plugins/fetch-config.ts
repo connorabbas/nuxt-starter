@@ -31,7 +31,7 @@ export default defineNuxtPlugin({
 
                 // 401 Unauthorized - Invalid/missing authentication
                 if (status === 401) {
-                    authStore.invalidateSession()
+                    authStore.invalidateClientSession()
                     toast.add({
                         title: 'Unauthorized',
                         description: data?.message || 'Please log in to continue.',

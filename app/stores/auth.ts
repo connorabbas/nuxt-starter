@@ -9,7 +9,6 @@ export const useAuthStore = defineStore('auth', () => {
     type GetSessionReturn = Awaited<ReturnType<AuthClient['getSession']>>
 
     const session = ref<UseSessionReturn | GetSessionReturn | null>(null)
-    const isHydrated = ref(false)
 
     const user = computed<User | null>(() => session.value?.data?.user)
     const loading = computed(() => session.value?.isPending ?? false)
@@ -37,18 +36,13 @@ export const useAuthStore = defineStore('auth', () => {
             await fetchSession()
             return
         }
-        if (import.meta.client && !isHydrated.value) {
-            isHydrated.value = true
-            return
-        }
         if (import.meta.client) {
             await fetchFreshSession()
         }
     }
 
-    const invalidateSession = () => {
+    const invalidateClientSession = () => {
         session.value = null
-        isHydrated.value = false
     }
 
     const signOut = async () => {
@@ -59,7 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
                 }
             }
         })
-        invalidateSession()
+        invalidateClientSession()
     }
 
     return {
@@ -70,7 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
         fetchSession,
         fetchFreshSession,
         ensureSession,
-        invalidateSession,
+        invalidateClientSession,
         signOut
     }
 })

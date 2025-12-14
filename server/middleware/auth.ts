@@ -1,3 +1,5 @@
+import type { Session, User } from 'better-auth'
+
 export default defineEventHandler(async (event) => {
     const path = event.node.req.url || ''
     if (path.startsWith('/api/app/')) {
@@ -13,7 +15,7 @@ export default defineEventHandler(async (event) => {
         }
 
         // Attach session and user to event context for resulting api route
-        event.context.session = session.session
-        event.context.user = session.user
+        event.context.session = session.session as Session
+        event.context.user = session.user as User
     }
 })
