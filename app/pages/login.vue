@@ -10,7 +10,7 @@ definePageMeta({
 
 const config = useRuntimeConfig()
 const route = useRoute()
-const toast = useToast()
+//const toast = useToast()
 
 const fields: AuthFormField[] = [{
     name: 'email',
@@ -48,6 +48,7 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
+// TODO: CSRF
 const serverError = ref('')
 const submitting = ref(false)
 const redirectTo = computed(() => {

@@ -9,6 +9,7 @@ export const useAuthStore = defineStore('auth', () => {
     type GetSessionReturn = Awaited<ReturnType<AuthClient['getSession']>>
 
     const session = ref<UseSessionReturn | GetSessionReturn | null>(null)
+    //const session = ref<Awaited<ReturnType<typeof authClient.useSession>> | null>(null)
 
     const user = computed<User | null>(() => session.value?.data?.user)
     const loading = computed(() => session.value?.isPending ?? false)
