@@ -9,6 +9,7 @@ definePageMeta({
 })
 
 const config = useRuntimeConfig()
+const { csrf } = useCsrf()
 const toast = useToast()
 
 const fields: AuthFormField[] = [{
@@ -59,7 +60,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         name: event.data.name,
         email: event.data.email,
         password: event.data.password,
-        callbackURL: '/dashboard?welcome=true'
+        callbackURL: '/dashboard?welcome=true',
+        fetchOptions: {
+            headers: {
+                'csrf-token': csrf
+            }
+        }
     })
 
     if (error) {

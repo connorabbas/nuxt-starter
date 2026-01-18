@@ -2,7 +2,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ['@nuxt/eslint', '@nuxt/ui', '@pinia/nuxt'],
+    modules: ['@nuxt/eslint', '@nuxt/ui', '@pinia/nuxt', 'nuxt-csurf'],
     devtools: {
         enabled: Boolean(process.env.NUXT_DEVTOOLS) || false
     },

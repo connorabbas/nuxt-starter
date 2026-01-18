@@ -46,10 +46,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     const signOut = async () => {
+        const { csrf } = useCsrf()
         await authClient.signOut({
             fetchOptions: {
                 onSuccess: () => {
                     navigateTo('/')
+                },
+                headers: {
+                    'csrf-token': csrf
                 }
             }
         })
