@@ -1,30 +1,28 @@
 <script setup lang="ts">
-import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
 const authStore = useAuthStore()
+const { userMenuItems } = useAppLayout()
 
-const navMenuItems: NavigationMenuItem[] = [
-    {
-        label: 'Dashboard',
-        to: '/dashboard'
-    }
-]
-const userDropdownItems = ref<DropdownMenuItem[][]>([
-    [
-        {
-            label: 'Settings',
-            icon: 'i-lucide-settings',
-            to: '/settings'
-        }
-    ],
-    [
-        {
-            label: 'Logout',
-            icon: 'i-lucide-log-out',
-            onSelect: () => authStore.signOut()
-        }
-    ]
-])
+const navMenuItems = [[{
+    label: 'Home',
+    icon: 'i-lucide-house',
+    to: '/'
+}, {
+    label: 'Dashboard',
+    icon: 'i-lucide-layout-dashboard',
+    to: '/dashboard'
+}, {
+    label: 'Feedback',
+    icon: 'i-lucide-message-circle',
+    to: 'https://github.com/nuxt-ui-templates/dashboard',
+    target: '_blank'
+}, {
+    label: 'Help & Support',
+    icon: 'i-lucide-info',
+    to: 'https://github.com/nuxt-ui-templates/dashboard',
+    target: '_blank'
+}]] satisfies NavigationMenuItem[][]
 </script>
 
 <template>
@@ -46,7 +44,7 @@ const userDropdownItems = ref<DropdownMenuItem[][]>([
 
                 <UDropdownMenu
                     v-if="authStore.isAuthenticated"
-                    :items="userDropdownItems"
+                    :items="userMenuItems"
                     :content="{
                         align: 'end',
                         side: 'bottom',
@@ -62,14 +60,6 @@ const userDropdownItems = ref<DropdownMenuItem[][]>([
                         :label="authStore?.user?.name"
                     />
                 </UDropdownMenu>
-
-                <!-- <UButton
-                    icon="i-lucide-log-out"
-                    color="neutral"
-                    variant="ghost"
-                    label="Log out"
-                    @click="signOut"
-                /> -->
             </template>
         </UHeader>
 
