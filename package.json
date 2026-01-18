@@ -17,7 +17,7 @@
     "dependencies": {
         "@iconify-json/lucide": "^1.2.68",
         "@iconify-json/simple-icons": "^1.2.53",
-        "@nuxt/ui": "^4.0.0",
+        "@nuxt/ui": "^4.3.0",
         "@pinia/nuxt": "^0.11.2",
         "@vitejs/plugin-vue": "^6.0.1",
         "@vue-email/components": "^0.0.21",
@@ -29,7 +29,7 @@
         "drizzle-orm": "^0.44.6",
         "drizzle-seed": "^0.3.1",
         "nodemailer": "^7.0.6",
-        "nuxt": "^4.1.2",
+        "nuxt": "^4.2.0",
         "nuxt-csurf": "^1.6.5",
         "pg": "^8.16.3",
         "pinia": "^3.0.3",
