@@ -11,7 +11,7 @@ const { data, execute, error } = await useFetch('/api/app/user-session', { immed
 </script>
 
 <template>
-    <UContainer class="flex items-center justify-center py-8">
+    <UContainer class="flex items-center justify-center">
         <UCard
             class="w-full max-w-md"
             variant="subtle"

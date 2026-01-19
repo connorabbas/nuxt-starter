@@ -1,18 +1,25 @@
 <script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
 definePageMeta({
     layout: 'app',
     middleware: ['auth'],
-    pageTitle: 'Settings'
+    pageTitle: 'Settings',
+    toolbarNavItems: [{
+        label: 'General',
+        icon: 'i-lucide-user',
+        to: '/settings',
+        exact: true
+    }, {
+        label: 'Security',
+        icon: 'i-lucide-shield',
+        to: '/settings/security'
+    }] satisfies NavigationMenuItem[]
 })
 </script>
 
 <template>
-    <UContainer class="flex items-center justify-center py-8">
-        <UCard
-            class="w-full max-w-md"
-            variant="subtle"
-        >
-            Settings - TODO
-        </UCard>
-    </UContainer>
+    <div class="flex flex-col gap-4 sm:gap-6">
+        <NuxtPage />
+    </div>
 </template>

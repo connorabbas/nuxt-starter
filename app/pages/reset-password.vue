@@ -58,6 +58,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         navigateTo('/login')
     }
 
+    // TODO: try catch finally block
     submitting.value = false
 }
 </script>

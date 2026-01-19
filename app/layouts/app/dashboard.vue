@@ -1,4 +1,3 @@
-<!-- TODO: WIP https://ui.nuxt.com/docs/components#dashboard -->
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
@@ -8,6 +7,7 @@ const toast = useToast()
 const { userMenuItems } = useAppLayout()
 
 const pageTitle = computed(() => route.meta.pageTitle as string)
+const toolbarNavItems = computed(() => route.meta.toolbarNavItems as NavigationMenuItem[])
 
 const open = ref(false)
 
@@ -157,7 +157,6 @@ onMounted(async () => {
 
         <UDashboardSearch :groups="groups" />
 
-        <!-- TODO: might not work here in the layout with multiple slots... -->
         <UDashboardPanel>
             <template #header>
                 <UDashboardNavbar :title="pageTitle">
@@ -169,13 +168,18 @@ onMounted(async () => {
                         <slot name="navbar-right" />
                     </template>
                 </UDashboardNavbar>
+
+                <UDashboardToolbar v-if="toolbarNavItems">
+                    <UNavigationMenu
+                        :items="toolbarNavItems"
+                        highlight
+                        class="-mx-1 flex-1"
+                    />
+                </UDashboardToolbar>
             </template>
             <template #body>
                 <slot />
             </template>
         </UDashboardPanel>
-
-        <!-- TODO -->
-        <!-- <NotificationsSlideover /> -->
     </UDashboardGroup>
 </template>

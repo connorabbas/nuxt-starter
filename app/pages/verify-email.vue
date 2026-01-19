@@ -48,6 +48,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         })
     }
 
+    // TODO: try catch finally block
     submitting.value = false
 }
 </script>
