@@ -19,11 +19,11 @@ const props = defineProps<{
         </template>
 
         <template #body>
-            Thanks for signing up! Please verify your email address to get started.
+            Please verify your email address for security reasons.
         </template>
 
         <template #remarks>
-            If you didn't create this account, you can safely ignore this email.
+            If you didn't create or update this account, you can safely ignore this email.
         </template>
     </Transactional>
 </template>
