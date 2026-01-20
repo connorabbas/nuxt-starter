@@ -4,10 +4,7 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const authStore = useAuthStore()
 const route = useRoute()
 const toast = useToast()
-const { userMenuItems } = useAppLayout()
-
-const pageTitle = computed(() => route.meta.pageTitle as string)
-const toolbarNavItems = computed(() => route.meta.toolbarNavItems as NavigationMenuItem[])
+const { pageTitle, subPageNavItems, userMenuItems } = useAppLayout()
 
 const open = ref(false)
 
@@ -169,9 +166,9 @@ onMounted(async () => {
                     </template>
                 </UDashboardNavbar>
 
-                <UDashboardToolbar v-if="toolbarNavItems">
+                <UDashboardToolbar v-if="subPageNavItems">
                     <UNavigationMenu
-                        :items="toolbarNavItems"
+                        :items="subPageNavItems"
                         highlight
                         class="-mx-1 flex-1"
                     />

@@ -9,7 +9,6 @@ definePageMeta({
 })
 
 // TODO: https://www.better-auth.com/docs/concepts/users-accounts#change-password
-
 const passwordSchema = z.object({
     current: z.string().min(8, 'Must be at least 8 characters'),
     new: z.string('Please confirm your new password')
@@ -23,7 +22,7 @@ const password = reactive<Partial<PasswordSchema>>({
     new: undefined
 })
 
-// TODO
+// TODO: probably remove? Use hook on better-auth backend
 const validate = (state: Partial<PasswordSchema>): FormError[] => {
     const errors: FormError[] = []
     if (state.current && state.new && state.current === state.new) {
@@ -44,7 +43,7 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
                 :schema="passwordSchema"
                 :state="password"
                 :validate="validate"
-                class="flex flex-col gap-4 max-w-xs"
+                class="flex flex-col gap-4 max-w-sm"
             >
                 <UFormField name="current">
                     <UInput

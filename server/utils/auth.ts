@@ -15,6 +15,12 @@ export const auth = betterAuth({
         provider: 'pg',
         usePlural: true
     }),
+    user: {
+        changeEmail: {
+            enabled: true
+            // TODO: https://www.better-auth.com/docs/concepts/users-accounts#confirming-with-current-email
+        }
+    },
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: runtimeConfig.public.auth.mustVerifyEmail,

@@ -2,7 +2,7 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 
 const authStore = useAuthStore()
-const { userMenuItems } = useAppLayout()
+const { subPageNavItems, userMenuItems } = useAppLayout()
 
 const navMenuItems = [[{
     label: 'Home',
@@ -63,8 +63,29 @@ const navMenuItems = [[{
             </template>
         </UHeader>
 
+        <div
+            v-if="subPageNavItems"
+            class="border-default sticky top-(--ui-header-height) z-50 w-full border-b bg-default/75 backdrop-blur"
+        >
+            <UContainer>
+                <UNavigationMenu
+                    class="w-full -mx-2.5"
+                    color="neutral"
+                    variant="pill"
+                    :items="subPageNavItems"
+                    :ui="{
+                        list: 'min-w-auto overflow-auto', // scrollable on mobile
+                        item: 'min-w-auto',
+                    }"
+                    highlight
+                />
+            </UContainer>
+        </div>
+
         <UMain>
-            <slot />
+            <div class="py-4 sm:py-6">
+                <slot />
+            </div>
         </UMain>
 
         <USeparator icon="i-simple-icons-nuxtdotjs" />

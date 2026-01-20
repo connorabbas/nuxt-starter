@@ -5,7 +5,7 @@ definePageMeta({
     layout: 'app',
     middleware: ['auth'],
     pageTitle: 'Settings',
-    toolbarNavItems: [{
+    subPageNavItems: [{
         label: 'General',
         icon: 'i-lucide-user',
         to: '/settings',

@@ -9,8 +9,12 @@ definePageMeta({
     pageTitle: 'Settings'
 })
 
-const { csrf } = useCsrf()
+// TODO: check for email_updated query param, show message component
+
+const config = useRuntimeConfig()
 const authStore = useAuthStore()
+const toast = useToast()
+const { csrf } = useCsrf()
 
 const updatingInfo = ref(false)
 const infoServerError = ref('')
@@ -37,26 +41,80 @@ async function submitInfo(event: FormSubmitEvent<InfoSchema>) {
     if (error) {
         infoServerError.value = error.message || error.statusText
     } else {
+        toast.add({
+            title: 'Your information has been updated',
+            color: 'success',
+            icon: 'i-lucide-circle-check-big'
+        })
         await authStore.fetchFreshSession()
     }
 
     // TODO: try catch finally block
     updatingInfo.value = false
 }
+
+// TODO: email template check if new account or changing email for template verbiage
+// TODO: why redirecting to dashboard?
+const updatingEmail = ref(false)
+const emailServerError = ref('')
+const email = reactive({
+    new: authStore.user?.email
+})
+const emailSchema = z.object({
+    new: z.email('Invalid email format')
+})
+type EmailSchema = z.output<typeof emailSchema>
+// https://www.better-auth.com/docs/concepts/users-accounts#change-email
+async function submitEmail(event: FormSubmitEvent<EmailSchema>) {
+    if (updatingEmail.value) return
+    updatingEmail.value = true
+
+    const { error } = await authClient.changeEmail({
+        newEmail: event.data.new,
+        callbackURL: '/settings?email_updated=true',
+        fetchOptions: {
+            headers: {
+                'csrf-token': csrf
+            }
+        }
+    })
+    if (error) {
+        emailServerError.value = error.message || error.statusText
+    } else {
+        await authStore.fetchFreshSession()
+        toast.add({
+            title: 'Your email change request has been submitted',
+            description: 'Please check your inbox',
+            color: 'success',
+            icon: 'i-lucide-circle-check-big'
+        })
+        if (config.public.auth.mustVerifyEmail) {
+            navigateTo({ name: 'verify-email', query: { email: event.data.new } })
+        } else {
+            navigateTo('/settings')
+        }
+    }
+
+    // TODO: try catch finally block
+    updatingEmail.value = false
+}
 </script>
 
 <template>
     <UContainer class="flex flex-col gap-4 sm:gap-6 w-full lg:max-w-2xl mx-auto">
+        <!-- TODO: consolidate to one form/card -->
         <UPageCard
             title="Info"
             description="Update your information"
             variant="subtle"
+            :ui="{
+                header: 'w-full'
+            }"
         >
             <template
                 v-if="infoServerError"
                 #header
             >
-                <!-- TODO: full width -->
                 <UAlert
                     color="error"
                     variant="subtle"
@@ -68,14 +126,14 @@ async function submitInfo(event: FormSubmitEvent<InfoSchema>) {
             <UForm
                 :schema="infoSchema"
                 :state="info"
-                class="flex flex-col gap-4 max-w-xs"
+                class="flex flex-col gap-4 max-w-sm"
                 @submit="submitInfo"
             >
                 <UFormField name="name">
                     <UInput
                         v-model="info.name"
                         type="text"
-                        placeholder="Current password"
+                        placeholder="Your name"
                         class="w-full"
                     />
                 </UFormField>
@@ -87,30 +145,38 @@ async function submitInfo(event: FormSubmitEvent<InfoSchema>) {
                 />
             </UForm>
         </UPageCard>
-        <!-- <UPageCard
-            title="Password"
-            description="Confirm your current password before setting a new one."
+
+        <UPageCard
+            title="Email"
+            description="Update your email address"
             variant="subtle"
+            :ui="{
+                header: 'w-full'
+            }"
         >
-            <UForm
-                :schema="passwordSchema"
-                :state="password"
-                :validate="validate"
-                class="flex flex-col gap-4 max-w-xs"
+            <template
+                v-if="emailServerError"
+                #header
             >
-                <UFormField name="current">
+                <UAlert
+                    color="error"
+                    variant="subtle"
+                    title="Error"
+                    :description="emailServerError"
+                    icon="i-lucide-circle-x"
+                />
+            </template>
+            <UForm
+                :schema="emailSchema"
+                :state="email"
+                class="flex flex-col gap-4 max-w-sm"
+                @submit="submitEmail"
+            >
+                <UFormField name="email">
                     <UInput
-                        v-model="password.current"
-                        type="password"
-                        placeholder="Current password"
-                        class="w-full"
-                    />
-                </UFormField>
-                <UFormField name="new">
-                    <UInput
-                        v-model="password.new"
-                        type="password"
-                        placeholder="New password"
+                        v-model="email.new"
+                        type="text"
+                        placeholder="Your email"
                         class="w-full"
                     />
                 </UFormField>
@@ -118,8 +184,9 @@ async function submitInfo(event: FormSubmitEvent<InfoSchema>) {
                     label="Update"
                     class="w-fit"
                     type="submit"
+                    :loading="updatingEmail"
                 />
             </UForm>
-        </UPageCard> -->
+        </UPageCard>
     </UContainer>
 </template>

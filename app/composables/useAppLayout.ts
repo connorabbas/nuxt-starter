@@ -1,8 +1,11 @@
-import type { DropdownMenuItem } from '@nuxt/ui'
+import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 
 export function useAppLayout() {
 
     const authStore = useAuthStore()
+    const route = useRoute()
+    const pageTitle = computed(() => route.meta.pageTitle as string)
+    const subPageNavItems = computed(() => route.meta.subPageNavItems as NavigationMenuItem[])
 
     const userMenuItems = computed<DropdownMenuItem[][]>(() => ([
         [{
@@ -17,6 +20,8 @@ export function useAppLayout() {
     ]))
 
     return {
+        pageTitle,
+        subPageNavItems,
         userMenuItems
     }
 }
