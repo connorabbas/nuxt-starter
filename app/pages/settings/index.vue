@@ -9,11 +9,24 @@ definePageMeta({
     pageTitle: 'Settings'
 })
 
-// TODO: check for email_updated query param, show message component
-
 const authStore = useAuthStore()
 const toast = useToast()
 const { csrf } = useCsrf()
+const route = useRoute()
+const router = useRouter()
+
+// TODO: check for error param (user_not_found)
+// Check for email verification success
+const showEmailUpdatedAlert = ref(false)
+onMounted(() => {
+    if (route.query.email_updated === 'true') {
+        showEmailUpdatedAlert.value = true
+    }
+})
+function dismissEmailAlert() {
+    showEmailUpdatedAlert.value = false
+    router.replace({ query: { ...route.query, email_updated: undefined } })
+}
 
 const updating = ref(false)
 const serverError = ref('')
@@ -36,16 +49,6 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
     try {
         const nameChanged = event.data.name !== authStore.user?.name
         const emailChanged = event.data.email !== authStore.user?.email
-
-        if (!nameChanged && !emailChanged) {
-            toast.add({
-                title: 'Information was not updated',
-                description: 'You entered the same profile information',
-                color: 'info',
-                icon: 'i-lucide-info'
-            })
-            return
-        }
 
         // Update name if changed
         if (nameChanged) {
@@ -88,7 +91,7 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
         // Show appropriate success message
         if (nameChanged && emailChanged) {
             toast.add({
-                title: 'Settings updated successfully',
+                title: 'Settings successfully updated',
                 description: 'Please check your inbox to verify your new email',
                 color: 'success',
                 icon: 'i-lucide-circle-check-big'
@@ -115,6 +118,17 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
 
 <template>
     <UContainer class="flex flex-col gap-4 sm:gap-6 w-full lg:max-w-2xl mx-auto">
+        <UAlert
+            v-if="showEmailUpdatedAlert"
+            color="success"
+            variant="subtle"
+            title="New email successfully verified"
+            description="Your email address has been updated"
+            icon="i-lucide-circle-check-big"
+            close
+            @update:open="dismissEmailAlert"
+        />
+
         <UPageCard
             title="Profile"
             description="Update your account information"

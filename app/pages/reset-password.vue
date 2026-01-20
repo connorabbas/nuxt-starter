@@ -10,6 +10,7 @@ definePageMeta({
 
 const route = useRoute()
 const toast = useToast()
+const { csrf } = useCsrf()
 
 const fields: AuthFormField[] = [{
     name: 'password',
@@ -44,7 +45,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     const { error } = await authClient.resetPassword({
         newPassword: event.data.password,
-        token
+        token,
+        fetchOptions: {
+            headers: {
+                'csrf-token': csrf
+            }
+        }
     })
 
     if (error) {
@@ -52,6 +58,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     } else {
         toast.add({
             title: 'Password successfully reset',
+            description: 'You may now login with your new password',
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })

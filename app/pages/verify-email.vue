@@ -10,6 +10,7 @@ definePageMeta({
 
 const toast = useToast()
 const route = useRoute()
+const { csrf } = useCsrf()
 
 const presetEmail = route.query.email as string
 const fields: AuthFormField[] = [{
@@ -35,7 +36,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     const { error } = await authClient.sendVerificationEmail({
         email: event.data.email,
-        callbackURL: '/dashboard?welcome=true'
+        callbackURL: '/dashboard?welcome=true',
+        fetchOptions: {
+            headers: {
+                'csrf-token': csrf
+            }
+        }
     })
 
     if (error) {

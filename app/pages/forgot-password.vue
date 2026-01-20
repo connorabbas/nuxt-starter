@@ -10,6 +10,7 @@ definePageMeta({
 
 const config = useRuntimeConfig()
 const toast = useToast()
+const { csrf } = useCsrf()
 
 const fields: AuthFormField[] = [{
     name: 'email',
@@ -33,14 +34,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     const { data, error } = await authClient.requestPasswordReset({
         email: event.data.email,
-        redirectTo: `${config.public.baseURL}/reset-password`
+        redirectTo: `${config.public.baseURL}/reset-password`,
+        fetchOptions: {
+            headers: {
+                'csrf-token': csrf
+            }
+        }
     })
 
     if (error) {
         serverError.value = error.message || error.statusText
     } else {
         toast.add({
-            title: data?.message ?? 'We have emailed your password reset link',
+            title: 'Password reset requested',
+            description: data?.message ?? 'We have emailed your password reset link',
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })
