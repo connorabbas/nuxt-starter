@@ -1,5 +1,38 @@
+<script setup lang="ts">
+const route = useRoute()
+const router = useRouter()
+
+// Check for account deletion success
+const showAccountDeletedAlert = ref(false)
+onMounted(() => {
+    if (route.query.account_deleted === 'true') {
+        showAccountDeletedAlert.value = true
+    }
+})
+function dismissAccountDeletedAlert() {
+    showAccountDeletedAlert.value = false
+    router.replace({ query: { ...route.query, account_deleted: undefined } })
+}
+</script>
+
 <template>
     <div>
+        <!-- Account Deleted Success Alert -->
+        <UContainer
+            v-if="showAccountDeletedAlert"
+            class="py-4"
+        >
+            <UAlert
+                color="success"
+                variant="subtle"
+                title="Account successfully deleted"
+                description="Your account and all associated data have been permanently removed. We're sorry to see you go, but you're always welcome back."
+                icon="i-lucide-circle-check-big"
+                close
+                @update:open="dismissAccountDeletedAlert"
+            />
+        </UContainer>
+
         <UPageHero
             title="Nuxt Starter Template"
             description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
@@ -19,7 +52,6 @@
                 variant: 'subtle'
             }]"
         />
-
         <UPageSection
             id="features"
             title="Everything you need to build modern Nuxt apps"
@@ -50,7 +82,6 @@
                 description: 'Enterprise-ready architecture with proper error handling, SEO optimization, and security best practices built-in.'
             }]"
         />
-
         <UPageSection>
             <UPageCTA
                 title="Ready to build your next Nuxt app?"

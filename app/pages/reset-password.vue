@@ -38,24 +38,41 @@ type Schema = z.output<typeof schema>
 
 const serverError = ref('')
 const submitting = ref(false)
-const token = route.query.token as string // TODO: Error UI is no token in URL
+const token = route.query.token as string
+
+// Check for missing token on mount
+onMounted(() => {
+    if (!token) {
+        serverError.value = 'Invalid or missing reset token. Please request a new password reset.'
+    }
+})
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
+    if (!token) {
+        serverError.value = 'Invalid or missing reset token. Please request a new password reset.'
+        return
+    }
+
     submitting.value = true
+    serverError.value = ''
 
-    const { error } = await authClient.resetPassword({
-        newPassword: event.data.password,
-        token,
-        fetchOptions: {
-            headers: {
-                'csrf-token': csrf
+    try {
+        const { error } = await authClient.resetPassword({
+            newPassword: event.data.password,
+            token,
+            fetchOptions: {
+                headers: {
+                    'csrf-token': csrf
+                }
             }
-        }
-    })
+        })
 
-    if (error) {
-        serverError.value = error.message || error.statusText
-    } else {
+        if (error) {
+            serverError.value = error.message || error.statusText
+            return
+        }
+
         toast.add({
             title: 'Password successfully reset',
             description: 'You may now login with your new password',
@@ -63,10 +80,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             icon: 'i-lucide-circle-check-big'
         })
         navigateTo('/login')
+    } catch (error) {
+        serverError.value = 'An unexpected error occurred. Please try again.'
+        console.error('Password reset error:', error)
+    } finally {
+        submitting.value = false
     }
-
-    // TODO: try catch finally block
-    submitting.value = false
 }
 </script>
 

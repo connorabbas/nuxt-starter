@@ -112,6 +112,10 @@ onMounted(async () => {
                     tooltip
                     class="mt-auto"
                 />
+
+                <UColorModeButton v-if="collapsed" />
+                <UColorModeSelect v-else />
+
             </template>
 
             <template #footer="{ collapsed }">

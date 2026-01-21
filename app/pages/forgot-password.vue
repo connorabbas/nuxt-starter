@@ -28,33 +28,40 @@ type Schema = z.output<typeof schema>
 
 const serverError = ref('')
 const submitting = ref(false)
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
     submitting.value = true
+    serverError.value = ''
 
-    const { data, error } = await authClient.requestPasswordReset({
-        email: event.data.email,
-        redirectTo: `${config.public.baseURL}/reset-password`,
-        fetchOptions: {
-            headers: {
-                'csrf-token': csrf
+    try {
+        const { data, error } = await authClient.requestPasswordReset({
+            email: event.data.email,
+            redirectTo: `${config.public.baseURL}/reset-password`,
+            fetchOptions: {
+                headers: {
+                    'csrf-token': csrf
+                }
             }
-        }
-    })
+        })
 
-    if (error) {
-        serverError.value = error.message || error.statusText
-    } else {
+        if (error) {
+            serverError.value = error.message || error.statusText
+            return
+        }
+
         toast.add({
             title: 'Password reset requested',
             description: data?.message ?? 'We have emailed your password reset link',
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })
+    } catch (error) {
+        serverError.value = 'An unexpected error occurred. Please try again.'
+        console.error('Password reset request error:', error)
+    } finally {
+        submitting.value = false
     }
-
-    // TODO: try catch finally block
-    submitting.value = false
 }
 </script>
 

@@ -11,7 +11,6 @@ definePageMeta({
 const config = useRuntimeConfig()
 const route = useRoute()
 const { csrf } = useCsrf()
-//const toast = useToast()
 
 const fields: AuthFormField[] = [{
     name: 'email',
@@ -55,33 +54,39 @@ const redirectTo = computed(() => {
     const redirect = route.query.redirect as string
     return redirect || '/dashboard'
 })
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
     submitting.value = true
+    serverError.value = ''
 
-    const { error } = await authClient.signIn.email({
-        email: event.data.email,
-        password: event.data.password,
-        rememberMe: event.data.rememberMe,
-        callbackURL: redirectTo.value,
-        fetchOptions: {
-            headers: {
-                'csrf-token': csrf
+    try {
+        const { error } = await authClient.signIn.email({
+            email: event.data.email,
+            password: event.data.password,
+            rememberMe: event.data.rememberMe,
+            callbackURL: redirectTo.value,
+            fetchOptions: {
+                headers: {
+                    'csrf-token': csrf
+                }
             }
-        }
-    })
+        })
 
-    if (error) {
-        const errMessage = error.message || error.statusText
-        if (config.public.auth.mustVerifyEmail && error.code === 'EMAIL_NOT_VERIFIED') {
-            navigateTo({ name: 'verify-email', query: { email: event.data.email } })
-        } else {
-            serverError.value = errMessage
+        if (error) {
+            if (config.public.auth.mustVerifyEmail && error.code === 'EMAIL_NOT_VERIFIED') {
+                navigateTo({ name: 'verify-email', query: { email: event.data.email } })
+                return
+            }
+            serverError.value = error.message || error.statusText
+            return
         }
+    } catch (error) {
+        serverError.value = 'An unexpected error occurred. Please try again.'
+        console.error('Login error:', error)
+    } finally {
+        submitting.value = false
     }
-
-    // TODO: try catch finally block
-    submitting.value = false
 }
 </script>
 

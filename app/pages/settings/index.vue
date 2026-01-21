@@ -180,7 +180,7 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                 </UFormField>
 
                 <UButton
-                    label="Update Settings"
+                    label="Save changes"
                     class="w-fit"
                     type="submit"
                     :loading="updating"

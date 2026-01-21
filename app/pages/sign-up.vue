@@ -52,39 +52,47 @@ type Schema = z.output<typeof schema>
 
 const serverError = ref('')
 const submitting = ref(false)
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
     submitting.value = true
+    serverError.value = ''
 
-    const { error } = await authClient.signUp.email({
-        name: event.data.name,
-        email: event.data.email,
-        password: event.data.password,
-        callbackURL: '/dashboard?welcome=true',
-        fetchOptions: {
-            headers: {
-                'csrf-token': csrf
+    try {
+        const { error } = await authClient.signUp.email({
+            name: event.data.name,
+            email: event.data.email,
+            password: event.data.password,
+            callbackURL: '/dashboard?success_message=welcome',
+            fetchOptions: {
+                headers: {
+                    'csrf-token': csrf
+                }
             }
-        }
-    })
+        })
 
-    if (error) {
-        serverError.value = error.message || error.statusText
-    } else {
+        if (error) {
+            serverError.value = error.message || error.statusText
+            return
+        }
+
         toast.add({
             title: 'Successfully signed up',
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })
+
         if (config.public.auth.mustVerifyEmail) {
             navigateTo({ name: 'verify-email', query: { email: event.data.email } })
         } else {
             navigateTo('/dashboard')
         }
+    } catch (error) {
+        serverError.value = 'An unexpected error occurred. Please try again.'
+        console.error('Sign up error:', error)
+    } finally {
+        submitting.value = false
     }
-
-    // TODO: try catch finally block
-    submitting.value = false
 }
 </script>
 

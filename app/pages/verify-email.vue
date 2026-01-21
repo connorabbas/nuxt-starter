@@ -30,32 +30,39 @@ type Schema = z.output<typeof schema>
 
 const serverError = ref('')
 const submitting = ref(false)
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (submitting.value) return
     submitting.value = true
+    serverError.value = ''
 
-    const { error } = await authClient.sendVerificationEmail({
-        email: event.data.email,
-        callbackURL: '/dashboard?welcome=true',
-        fetchOptions: {
-            headers: {
-                'csrf-token': csrf
+    try {
+        const { error } = await authClient.sendVerificationEmail({
+            email: event.data.email,
+            callbackURL: '/dashboard?welcome=true',
+            fetchOptions: {
+                headers: {
+                    'csrf-token': csrf
+                }
             }
-        }
-    })
+        })
 
-    if (error) {
-        serverError.value = error.message || error.statusText
-    } else {
+        if (error) {
+            serverError.value = error.message || error.statusText
+            return
+        }
+
         toast.add({
             title: 'Verification email has been resent',
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })
+    } catch (error) {
+        serverError.value = 'An unexpected error occurred. Please try again.'
+        console.error('Send verification email error:', error)
+    } finally {
+        submitting.value = false
     }
-
-    // TODO: try catch finally block
-    submitting.value = false
 }
 </script>
 
