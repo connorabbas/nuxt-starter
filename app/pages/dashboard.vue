@@ -21,9 +21,20 @@ onMounted(() => {
     }
 })
 
+// Example authenticated application-level data fetching utilizing route prefix (see auth server middleware)
+const { data, error, status, execute: fetchExample } = await useFetch('/api/app/example', {
+    immediate: false
+})
 
-const { data, error, status, execute } = await useFetch('/api/app/user-session', { immediate: false })
-const fetchingSession = computed(() => status.value === 'pending')
+const fetchingExample = computed(() => status.value === 'pending')
+const errorMessage = computed(() => {
+    if (!error.value) return ''
+    return error.value.data?.statusMessage || error.value.statusText || error.value.message || 'An error occurred'
+})
+
+function dismissError() {
+    error.value = undefined
+}
 </script>
 
 <template>
@@ -43,9 +54,12 @@ const fetchingSession = computed(() => status.value === 'pending')
             v-if="error"
             color="error"
             variant="subtle"
-        >
-            {{ error }}
-        </UAlert>
+            title="Error"
+            :description="errorMessage"
+            icon="i-lucide-circle-x"
+            close
+            @update:open="dismissError"
+        />
 
         <UPageCard
             class="w-full max-w-md mx-auto"
@@ -55,10 +69,10 @@ const fetchingSession = computed(() => status.value === 'pending')
         >
             <UButton
                 class="justify-center"
-                label="Test - Fetch Session"
+                label="Test - Fetch Example"
                 icon="lucide-test-tube-diagonal"
-                :loading="fetchingSession"
-                @click="execute()"
+                :loading="fetchingExample"
+                @click="fetchExample()"
             />
             <div v-if="data">
                 <code><pre class="whitespace-pre-wrap">{{ data }}</pre></code>
