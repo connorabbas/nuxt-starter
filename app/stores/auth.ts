@@ -65,8 +65,11 @@ export const useAuthStore = defineStore('auth', () => {
             return
         }
 
-        // On client-side navigation, session is already cached by Better Auth's cookie cache
-        // No need to refetch unless we specifically need fresh data
+        // On client-side navigation, session is cached by Better Auth's cookie cache
+        // Used if we specifically want fresh data on each page request
+        /* if (import.meta.client) {
+            await fetchFreshSession()
+        } */
     }
 
     const invalidateClientSession = () => {

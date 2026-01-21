@@ -1,7 +1,9 @@
 export default defineEventHandler(async (event) => {
     const { user, session } = event.context
 
-    // Test Error Handling
+    logger.info('Example server logging', { user })
+
+    // Test error handling on front-end
     /* throw createError({
         statusCode: 500,
         statusMessage: 'Example Error'
