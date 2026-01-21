@@ -66,6 +66,9 @@ async function submitNewPassword(event: FormSubmitEvent<PasswordSchema>) {
         password.new = undefined
         password.confirm = undefined
 
+        // Fetch fresh session data
+        await authStore.fetchFreshSession()
+
         toast.add({
             title: 'Password successfully updated',
             description: 'All other sessions have been revoked',

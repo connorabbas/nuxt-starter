@@ -1,44 +1,72 @@
-import type { User } from 'better-auth'
+import type { User, Session } from 'better-auth'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authClient } from '~/lib/auth-client'
 
 export const useAuthStore = defineStore('auth', () => {
-    type AuthClient = typeof authClient
-    type UseSessionReturn = Awaited<ReturnType<AuthClient['useSession']>>
-    type GetSessionReturn = Awaited<ReturnType<AuthClient['getSession']>>
+    interface SessionData {
+        user: User
+        session: Session
+    }
 
-    const session = ref<UseSessionReturn | GetSessionReturn | null>(null)
+    const session = ref<SessionData | null>(null)
+    const isPending = ref(false)
+    const sessionPromise = ref<Promise<void> | null>(null)
 
-    const user = computed<User | null>(() => session.value?.data?.user)
-    const loading = computed(() => session.value?.isPending ?? false)
-    const isAuthenticated = computed(() => !!session.value?.data?.session)
+    const user = computed<User | null>(() => session.value?.user ?? null)
+    const loading = computed(() => isPending.value)
+    const isAuthenticated = computed(() => !!session.value?.session)
 
     // For initial load and reactive updates
+    // Uses Better Auth's cookie cache by default
     const fetchSession = async () => {
-        const data = await authClient.useSession(useFetch)
-        session.value = data
+        isPending.value = true
+        try {
+            const data = await authClient.useSession(useFetch)
+            session.value = data.data.value
+        } catch (error) {
+            console.error('Fetch session error:', error)
+            session.value = null
+        } finally {
+            isPending.value = false
+        }
     }
 
-    // Get fresh session from the database
+    // Get fresh session from the database (bypasses cookie cache)
     const fetchFreshSession = async () => {
-        const freshData = await authClient.getSession({
-            query: {
-                disableCookieCache: true
-            }
-        })
-        session.value = freshData
+        isPending.value = true
+        try {
+            const freshData = await authClient.getSession({
+                query: {
+                    disableCookieCache: true // Force database fetch
+                }
+            })
+            session.value = freshData.data
+        } catch (error) {
+            console.error('Fetch fresh session error:', error)
+            session.value = null
+        } finally {
+            isPending.value = false
+        }
     }
 
-    // Session check (for middleware)
+    // Session check (for middleware) with race condition prevention
     const ensureSession = async () => {
+        // If already fetching, wait for that request
+        if (sessionPromise.value) {
+            return sessionPromise.value
+        }
+
+        // If no session, fetch it (uses cookie cache if enabled)
         if (!session.value) {
-            await fetchSession()
+            sessionPromise.value = fetchSession()
+            await sessionPromise.value
+            sessionPromise.value = null
             return
         }
-        if (import.meta.client) {
-            await fetchFreshSession()
-        }
+
+        // On client-side navigation, session is already cached by Better Auth's cookie cache
+        // No need to refetch unless we specifically need fresh data
     }
 
     const invalidateClientSession = () => {
@@ -47,17 +75,24 @@ export const useAuthStore = defineStore('auth', () => {
 
     const signOut = async () => {
         const { csrf } = useCsrf()
-        await authClient.signOut({
-            fetchOptions: {
-                onSuccess: () => {
-                    navigateTo('/')
-                },
-                headers: {
-                    'csrf-token': csrf
+        try {
+            await authClient.signOut({
+                fetchOptions: {
+                    onSuccess: () => {
+                        invalidateClientSession()
+                        navigateTo('/')
+                    },
+                    headers: {
+                        'csrf-token': csrf
+                    }
                 }
-            }
-        })
-        invalidateClientSession()
+            })
+        } catch (error) {
+            console.error('Sign out error:', error)
+            // Still invalidate local session even if server request fails
+            invalidateClientSession()
+            navigateTo('/')
+        }
     }
 
     return {

@@ -16,6 +16,12 @@ export const auth = betterAuth({
         provider: 'pg',
         usePlural: true
     }),
+    session: {
+        cookieCache: {
+            enabled: true, // @see https://www.better-auth.com/docs/concepts/session-management#session-caching
+            maxAge: 5 * 60 // Cache duration in seconds (5 minutes)
+        }
+    },
     user: {
         changeEmail: {
             enabled: true
