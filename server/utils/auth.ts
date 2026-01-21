@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { sendMail } from './mailer'
 import { render } from '@vue-email/render'
+import ConfirmDeleteUser from '~/mail/auth/ConfirmDeleteUser.vue'
 import WelcomeEmail from '~/mail/auth/VerifyEmail.vue'
 import ResetPwEmail from '~/mail/auth/ResetPassword.vue'
 
@@ -18,7 +19,23 @@ export const auth = betterAuth({
     user: {
         changeEmail: {
             enabled: true
-            // TODO: https://www.better-auth.com/docs/concepts/users-accounts#confirming-with-current-email
+        },
+        deleteUser: {
+            enabled: true,
+            sendDeleteAccountVerification: async ({ user, url }) => {
+                const subject = 'Confirm account deletion'
+                const html = await render(ConfirmDeleteUser, {
+                    subject,
+                    name: user.name,
+                    actionUrl: url
+                }, { pretty: true })
+
+                await sendMail({
+                    to: user.email,
+                    subject,
+                    html
+                })
+            }
         }
     },
     emailAndPassword: {
