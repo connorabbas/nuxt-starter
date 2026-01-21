@@ -39,7 +39,7 @@ function dismissAccountDeletedAlert() {
             description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
             :links="[{
                 label: 'Get started',
-                to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
+                to: 'https://ui.nuxt.com/docs/getting-started',
                 target: '_blank',
                 trailingIcon: 'i-lucide-arrow-right',
                 size: 'xl'
@@ -90,7 +90,7 @@ function dismissAccountDeletedAlert() {
                 variant="subtle"
                 :links="[{
                     label: 'Start building',
-                    to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
+                    to: 'https://ui.nuxt.com/docs/getting-started',
                     target: '_blank',
                     trailingIcon: 'i-lucide-arrow-right',
                     color: 'neutral'

@@ -6,12 +6,13 @@ import ConfirmDeleteUser from '~/mail/auth/ConfirmDeleteUser.vue'
 import WelcomeEmail from '~/mail/auth/VerifyEmail.vue'
 import ResetPwEmail from '~/mail/auth/ResetPassword.vue'
 
-const runtimeConfig = useRuntimeConfig()
+const config = useRuntimeConfig()
+
 export const auth = betterAuth({
-    appName: runtimeConfig.public.appName,
-    baseURL: runtimeConfig.public.baseURL,
-    trustedOrigins: [runtimeConfig.public.baseURL as string],
-    secret: runtimeConfig.betterAuthSecret,
+    appName: config.public.appName,
+    baseURL: config.public.baseURL,
+    trustedOrigins: [config.public.baseURL as string],
+    secret: config.betterAuthSecret,
     database: drizzleAdapter(db, {
         provider: 'pg',
         usePlural: true
@@ -46,7 +47,7 @@ export const auth = betterAuth({
     },
     emailAndPassword: {
         enabled: true,
-        requireEmailVerification: runtimeConfig.public.auth.mustVerifyEmail,
+        requireEmailVerification: config.public.auth.mustVerifyEmail,
         revokeSessionsOnPasswordReset: true,
         sendResetPassword: async ({ user, url }) => {
             const subject = 'Reset your password'
