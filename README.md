@@ -7,7 +7,7 @@ A starter kit for getting up and running with a full-stack Nuxt application.
 
 ### Features
 
--   **User authentication** - Email and password sign-up/registration, email verification, middleware for client and server routes
+-   **User authentication** - Email and password sign-up/registration, email verification, account settings, middleware for client and server routes
 -   **Database** - Pre-configured connection util, ORM, and migration scripts (PostgreSQL)
 -   **Email** - SMTP mailer with Vue SFC templating, transactional email layout (used for auth)
 -   **Logging** - Server-side logging utils for info/error details

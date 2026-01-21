@@ -6,9 +6,9 @@ definePageMeta({
 })
 
 const config = useRuntimeConfig()
-
 const route = useRoute()
 const router = useRouter()
+
 const showSuccessMessage = route.query.success_message as string
 function dismissSuccessMessageAlert() {
     router.replace({ query: { ...route.query, success_message: undefined } })
@@ -22,7 +22,8 @@ onMounted(() => {
 })
 
 
-const { data, execute, error } = await useFetch('/api/app/user-session', { immediate: false })
+const { data, error, status, execute } = await useFetch('/api/app/user-session', { immediate: false })
+const fetchingSession = computed(() => status.value === 'pending')
 </script>
 
 <template>
@@ -38,25 +39,30 @@ const { data, execute, error } = await useFetch('/api/app/user-session', { immed
             @update:open="dismissSuccessMessageAlert"
         />
 
-        <UCard
-            class="w-full max-w-md mx-auto"
+        <UAlert
+            v-if="error"
+            color="error"
             variant="subtle"
         >
-            Dashboard - Logged in!
+            {{ error }}
+        </UAlert>
+
+        <UPageCard
+            class="w-full max-w-md mx-auto"
+            title="Dashboard"
+            description="Logged in!"
+            variant="subtle"
+        >
             <UButton
-                label="test"
+                class="justify-center"
+                label="Test - Fetch Session"
+                icon="lucide-test-tube-diagonal"
+                :loading="fetchingSession"
                 @click="execute()"
             />
-            <UAlert
-                v-if="error"
-                color="error"
-                variant="subtle"
-            >
-                {{ error }}
-            </UAlert>
-            <div>
-                <pre>{{ data }}</pre>
+            <div v-if="data">
+                <code><pre class="whitespace-pre-wrap">{{ data }}</pre></code>
             </div>
-        </UCard>
+        </UPageCard>
     </UContainer>
 </template>

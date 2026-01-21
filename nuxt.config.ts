@@ -18,6 +18,7 @@ export default defineNuxtConfig({
         mailUsername: process.env.NUXT_SMTP_MAIL_USERNAME,
         mailPassword: process.env.NUXT_SMTP_MAIL_PASSWORD,
         public: {
+            repoURL: 'https://github.com/connorabbas/nuxt-starter',
             appEnv: process.env.NODE_ENV,
             baseURL: process.env.NUXT_APP_URL,
             appName: process.env.NUXT_APP_NAME,

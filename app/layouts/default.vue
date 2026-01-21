@@ -1,20 +1,8 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
-const items: NavigationMenuItem[] = [
-    /* {
-        label: 'Sign in',
-        to: '/login'
-    },
-    {
-        label: 'Sign up',
-        to: '/sign-up'
-    },
-    {
-        label: 'Dashboard',
-        to: '/dashboard'
-    } */
-]
+const config = useRuntimeConfig()
+const items: NavigationMenuItem[] = [] // add nav items as needed
 </script>
 
 <template>
@@ -32,31 +20,30 @@ const items: NavigationMenuItem[] = [
             />
 
             <template #right>
-                <UColorModeButton />
-
-                <UButton
-                    icon="i-lucide-log-in"
-                    color="neutral"
-                    variant="ghost"
-                    to="/login"
-                    class="lg:hidden"
-                />
-
-                <UButton
-                    label="Sign in"
-                    color="neutral"
-                    variant="subtle"
-                    to="/login"
-                    class="hidden lg:inline-flex"
-                />
-
-                <UButton
-                    label="Sign up"
-                    color="neutral"
-                    trailing-icon="i-lucide-arrow-right"
-                    class="hidden lg:inline-flex"
-                    to="/sign-up"
-                />
+                <div class="flex gap-3">
+                    <UColorModeButton />
+                    <UButton
+                        icon="i-lucide-log-in"
+                        color="neutral"
+                        variant="ghost"
+                        to="/login"
+                        class="lg:hidden"
+                    />
+                    <UButton
+                        label="Sign in"
+                        color="neutral"
+                        variant="subtle"
+                        to="/login"
+                        class="hidden lg:inline-flex"
+                    />
+                    <UButton
+                        label="Sign up"
+                        color="neutral"
+                        trailing-icon="i-lucide-arrow-right"
+                        class="hidden lg:inline-flex"
+                        to="/sign-up"
+                    />
+                </div>
             </template>
 
             <template #body>
@@ -100,7 +87,7 @@ const items: NavigationMenuItem[] = [
 
             <template #right>
                 <UButton
-                    to="https://github.com/nuxt-ui-templates/starter"
+                    :to="config.public.repoURL"
                     target="_blank"
                     icon="i-simple-icons-github"
                     aria-label="GitHub"

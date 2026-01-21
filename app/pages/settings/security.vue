@@ -201,42 +201,23 @@ async function handleDeleteAccount() {
         </UPageCard>
 
         <!-- Delete Account Confirmation Modal -->
-        <UModal v-model:open="isDeleteModalOpen">
-            <template #header>
-                <div class="w-full flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-red-500/10">
-                            <UIcon
-                                name="i-lucide-triangle-alert"
-                                class="w-5 h-5 text-red-500"
-                            />
-                        </div>
-                        <h3 class="text-lg font-semibold">
-                            Delete Account
-                        </h3>
-                    </div>
-                    <div>
-                        <UButton
-                            color="neutral"
-                            variant="ghost"
-                            icon="i-lucide-x"
-                            @click="isDeleteModalOpen = false"
-                        />
-                    </div>
-                </div>
-            </template>
-
+        <UModal
+            v-model:open="isDeleteModalOpen"
+            title="Delete Account"
+            description="Please confirm you would like to delete your account"
+        >
             <template #body>
-                <div class="space-y-4">
+                <div class="space-y-4 text-sm">
                     <p>
-                        Are you sure you want to delete your account? This action cannot be undone and will permanently delete:
+                        Are you sure you want to delete your account? This action cannot be undone and will permanently
+                        delete:
                     </p>
-                    <ul class="list-disc list-inside space-y-1 text-sm">
+                    <ul class="list-disc list-inside space-y-1">
                         <li>Your profile and account information</li>
                         <li>All your data and settings</li>
                         <li>Your access to all services</li>
                     </ul>
-                    <p class="text-sm font-medium">
+                    <p class="font-medium">
                         We'll send a verification email to <span class="font-semibold">
                             {{ authStore.user?.email }}
                         </span> to confirm this action.

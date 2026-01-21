@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
 
@@ -44,7 +45,7 @@ function dismissAccountDeletedAlert() {
                 size: 'xl'
             }, {
                 label: 'Use this template',
-                to: 'https://github.com/nuxt-ui-templates/starter',
+                to: config.public.repoURL,
                 target: '_blank',
                 icon: 'i-simple-icons-github',
                 size: 'xl',
@@ -95,7 +96,7 @@ function dismissAccountDeletedAlert() {
                     color: 'neutral'
                 }, {
                     label: 'View on GitHub',
-                    to: 'https://github.com/nuxt-ui-templates/starter',
+                    to: config.public.repoURL,
                     target: '_blank',
                     icon: 'i-simple-icons-github',
                     color: 'neutral',

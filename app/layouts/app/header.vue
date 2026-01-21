@@ -1,28 +1,7 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui'
-
+const config = useRuntimeConfig()
 const authStore = useAuthStore()
-const { subPageNavItems, userMenuItems } = useAppLayout()
-
-const navMenuItems = [[{
-    label: 'Home',
-    icon: 'i-lucide-house',
-    to: '/'
-}, {
-    label: 'Dashboard',
-    icon: 'i-lucide-layout-dashboard',
-    to: '/dashboard'
-}, {
-    label: 'Feedback',
-    icon: 'i-lucide-message-circle',
-    to: 'https://github.com/nuxt-ui-templates/dashboard',
-    target: '_blank'
-}, {
-    label: 'Help & Support',
-    icon: 'i-lucide-info',
-    to: 'https://github.com/nuxt-ui-templates/dashboard',
-    target: '_blank'
-}]] satisfies NavigationMenuItem[][]
+const { subPageNavItems, navMenuItems, userMenuItems } = useAppLayout()
 </script>
 
 <template>
@@ -35,7 +14,7 @@ const navMenuItems = [[{
             </template>
 
             <UNavigationMenu
-                :items="navMenuItems"
+                :items="navMenuItems.flat()"
                 variant="link"
             />
 
@@ -99,7 +78,7 @@ const navMenuItems = [[{
 
             <template #right>
                 <UButton
-                    to="https://github.com/nuxt-ui-templates/starter"
+                    :to="config.public.repoURL"
                     target="_blank"
                     icon="i-simple-icons-github"
                     aria-label="GitHub"
