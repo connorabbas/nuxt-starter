@@ -70,7 +70,7 @@ function dismissError() {
             <UButton
                 class="justify-center"
                 label="Test - Fetch Example"
-                icon="lucide-test-tube-diagonal"
+                icon="i-lucide-flask-conical"
                 :loading="fetchingExample"
                 @click="fetchExample()"
             />

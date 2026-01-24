@@ -1,6 +1,11 @@
 import { ofetch } from 'ofetch'
 import type { Pinia } from 'pinia'
 
+/**
+ * Global $fetch configuration with general purpose error handling
+ * Could also build as a custom useFetch() composable if desired
+ * @see https://nuxt.com/docs/4.x/examples/advanced/use-custom-fetch-composable
+ */
 export default defineNuxtPlugin({
     name: 'fetch-config',
     enforce: 'default',
@@ -9,7 +14,6 @@ export default defineNuxtPlugin({
         const toast = useToast()
         const authStore = useAuthStore(nuxtApp.$pinia as Pinia)
 
-        // ofetch configuration with error handling
         globalThis.$fetch = ofetch.create({
             retry: false,
             onRequestError({ error }) {
@@ -47,7 +51,7 @@ export default defineNuxtPlugin({
                     toast.add({
                         title: 'Access Denied',
                         description: data?.message || 'You don\'t have permission to access this resource.',
-                        color: 'error',
+                        color: 'warning',
                         icon: 'i-lucide-shield-alert'
                     })
                     return
@@ -58,7 +62,7 @@ export default defineNuxtPlugin({
                     toast.add({
                         title: 'Not Found',
                         description: data?.message || 'The requested resource was not found.',
-                        color: 'error',
+                        color: 'warning',
                         icon: 'i-lucide-search-x'
                     })
                     return
@@ -66,7 +70,7 @@ export default defineNuxtPlugin({
 
                 // 422 Unprocessable Entity - Validation errors
                 if (status === 422) {
-                    const validationMessage = data?.message || 'Please check your input and try again.'
+                    const validationMessage = data?.message || 'Please check your input/s and try again.'
                     toast.add({
                         title: 'Validation Error',
                         description: validationMessage,

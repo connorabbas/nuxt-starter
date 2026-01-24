@@ -18,7 +18,7 @@ export const auth = betterAuth({
         usePlural: true
     }),
     session: {
-        cookieCache: {
+        cookieCache: { // TODO: configure via runtime config...
             enabled: true, // @see https://www.better-auth.com/docs/concepts/session-management#session-caching
             maxAge: 5 * 60 // Cache duration in seconds (5 minutes)
         }
@@ -80,12 +80,6 @@ export const auth = betterAuth({
                 subject,
                 html
             })
-        }
-    },
-    logger: {
-        level: 'error',
-        log: (level, message, ...args) => {
-            logger.log(level, message, ...args)
         }
     }
 })

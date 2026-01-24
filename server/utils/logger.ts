@@ -1,22 +1,38 @@
 import winston from 'winston'
+import DailyRotateFile from 'winston-daily-rotate-file'
 
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.json() // structured logs
+        winston.format.json()
     ),
     transports: [
-        new winston.transports.File({ filename: 'server/logs/error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'server/logs/combined.log' })
-        // add other log files for different severities as needed (ex. info, debug)
+        new DailyRotateFile({
+            filename: 'server/logs/error-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            zippedArchive: true,
+            maxSize: '20m',
+            maxFiles: '7d',
+            level: 'error'
+        }),
+        new DailyRotateFile({
+            filename: 'server/logs/combined-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            zippedArchive: true,
+            maxSize: '20m',
+            maxFiles: '7d'
+        })
+        // Add more level-specific rotates if needed, e.g., for 'warn'
     ]
 })
 
-// If in development, also log to console
 if (process.env.NODE_ENV !== 'production') {
     logger.add(new winston.transports.Console({
-        format: winston.format.simple()
+        format: winston.format.combine(
+            winston.format.colorize(),
+            winston.format.simple()
+        )
     }))
 }
 

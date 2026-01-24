@@ -10,7 +10,7 @@ A starter kit for getting up and running with a full-stack Nuxt application in n
 -   **User authentication** - Email and password sign-up/login, email verification, account settings, middleware protection for client and server routes & pages
 -   **Database** - Pre-configured connection util, Drizzle ORM with provided schema & migration scripts (PostgreSQL)
 -   **Email** - SMTP powered mailer with Vue SFC enabled templating, transactional email template (for auth related mail)
--   **Server Logs** - Server-side logging utils for info/error details, nitro-related errors automatically logged via server plugin
+-   **Server Logs** - Server-side logging util, nitro-related server errors automatically logged via plugin, log file rotation
 -   **Client-side error handling** - Nuxt app plugin for ofetch/`$fetch()` configuration settings providing error handling based on request/response status code and authentication - toast message, auto login redirect with failed auth on protected api routes, etc.
 
 ### Tech Stack
