@@ -1,4 +1,3 @@
-// server/plugins/nitro-error-logger.ts
 import type { H3Error } from 'h3'
 
 export default defineNitroPlugin((nitroApp) => {

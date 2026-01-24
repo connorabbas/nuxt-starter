@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import z from 'zod'
+import { z } from 'zod'
 import { authClient } from '~/lib/auth-client'
 
 definePageMeta({

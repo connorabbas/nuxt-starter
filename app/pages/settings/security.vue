@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import z from 'zod'
+import { z } from 'zod'
 import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
@@ -217,9 +217,9 @@ async function handleDeleteAccount() {
                         <li>Your access to all services</li>
                     </ul>
                     <p class="font-medium">
-                        We'll send a verification email to <span class="font-semibold">
-                            {{ authStore.user?.email }}
-                        </span> to confirm this action.
+                        We'll send a verification email to
+                        <span class="font-semibold">{{ authStore.user?.email }}</span>
+                        for you to confirm this action.
                     </p>
                     <UAlert
                         v-if="deleteError"

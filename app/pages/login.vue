@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import z from 'zod'
+import { z } from 'zod'
 import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
 import { authClient } from '~/lib/auth-client'
 

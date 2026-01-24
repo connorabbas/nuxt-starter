@@ -70,7 +70,7 @@ export default defineNuxtPlugin({
 
                 // 422 Unprocessable Entity - Validation errors
                 if (status === 422) {
-                    const validationMessage = data?.message || 'Please check your input/s and try again.'
+                    const validationMessage = data?.message || 'Invalid input provided, please try again.'
                     toast.add({
                         title: 'Validation Error',
                         description: validationMessage,
