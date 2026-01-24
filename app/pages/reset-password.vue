@@ -62,9 +62,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             newPassword: event.data.password,
             token,
             fetchOptions: {
-                headers: {
-                    'csrf-token': csrf
-                }
+                headers: { 'csrf-token': csrf }
             }
         })
 

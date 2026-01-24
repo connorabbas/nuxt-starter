@@ -50,9 +50,7 @@ async function submitNewPassword(event: FormSubmitEvent<PasswordSchema>) {
             currentPassword: event.data.current,
             revokeOtherSessions: true,
             fetchOptions: {
-                headers: {
-                    'csrf-token': csrf
-                }
+                headers: { 'csrf-token': csrf }
             }
         })
 
@@ -92,9 +90,7 @@ async function handleDeleteAccount() {
         const { error } = await authClient.deleteUser({
             callbackURL: '/?account_deleted=true',
             fetchOptions: {
-                headers: {
-                    'csrf-token': csrf
-                }
+                headers: { 'csrf-token': csrf }
             }
         })
 

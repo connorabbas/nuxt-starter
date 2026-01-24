@@ -65,9 +65,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             password: event.data.password,
             callbackURL: '/dashboard?success_message=welcome',
             fetchOptions: {
-                headers: {
-                    'csrf-token': csrf
-                }
+                headers: { 'csrf-token': csrf }
             }
         })
 

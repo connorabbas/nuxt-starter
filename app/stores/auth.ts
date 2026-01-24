@@ -85,9 +85,7 @@ export const useAuthStore = defineStore('auth', () => {
                         invalidateClientSession()
                         navigateTo('/')
                     },
-                    headers: {
-                        'csrf-token': csrf
-                    }
+                    headers: { 'csrf-token': csrf }
                 }
             })
         } catch (error) {

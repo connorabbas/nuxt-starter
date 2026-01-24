@@ -67,9 +67,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             rememberMe: event.data.rememberMe,
             callbackURL: redirectTo.value,
             fetchOptions: {
-                headers: {
-                    'csrf-token': csrf
-                }
+                headers: { 'csrf-token': csrf }
             }
         })
 

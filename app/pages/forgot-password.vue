@@ -39,9 +39,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             email: event.data.email,
             redirectTo: `${config.public.baseURL}/reset-password`,
             fetchOptions: {
-                headers: {
-                    'csrf-token': csrf
-                }
+                headers: { 'csrf-token': csrf }
             }
         })
 

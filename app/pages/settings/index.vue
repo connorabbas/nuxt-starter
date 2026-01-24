@@ -55,9 +55,7 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
             const { error: nameError } = await authClient.updateUser({
                 name: event.data.name,
                 fetchOptions: {
-                    headers: {
-                        'csrf-token': csrf
-                    }
+                    headers: { 'csrf-token': csrf }
                 }
             })
 
@@ -73,9 +71,7 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                 newEmail: event.data.email,
                 callbackURL: '/settings?email_updated=true',
                 fetchOptions: {
-                    headers: {
-                        'csrf-token': csrf
-                    }
+                    headers: { 'csrf-token': csrf }
                 }
             })
 
