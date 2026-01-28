@@ -38,7 +38,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
     <UContainer class="flex flex-col gap-4 sm:gap-6 w-full lg:max-w-2xl mx-auto">
         <UPageCard
             title="Example"
-            description="Form with server-side Zod validations mapped into the form (phone # should fail)"
+            description="Form with server-side Zod validations mapped into the form"
             variant="subtle"
             :ui="{
                 header: 'w-full'
@@ -95,6 +95,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                 <UFormField
                     label="Phone"
                     name="phone"
+                    hint="(Should fail on server validation)"
                     required
                 >
                     <UInput
@@ -118,7 +119,6 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                 <UFormField
                     label="Address Line 2"
                     name="address2"
-                    hint="Optional on client, required on server (for testing)"
                 >
                     <UInput
                         v-model="state.address2"
