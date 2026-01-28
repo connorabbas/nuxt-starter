@@ -7,31 +7,34 @@ A starter kit for getting up and running with a full-stack Nuxt application in n
 
 ### Features
 
--   **User authentication** - Email and password sign-up/login, email verification, account settings, middleware protection for client and server routes & pages
--   **Database** - Pre-configured connection util, Drizzle ORM with provided schema & migration scripts (PostgreSQL)
--   **Email** - SMTP powered mailer with Vue SFC enabled templating, transactional email template (for auth related mail)
--   **Server Logs** - Server-side logging util, nitro-related server errors automatically logged via plugin, log file rotation
--   **Client-side error handling** - Nuxt app plugin for ofetch/`$fetch()` configuration settings providing error handling based on request/response status code and authentication - toast message, auto login redirect with failed auth on protected api routes, etc.
+- **User authentication** - Email and password sign-up/login, email verification, account settings, middleware protection for client and server routes & pages
+- **Database** - Pre-configured connection util, Drizzle ORM with provided schema & migration scripts (PostgreSQL)
+- **Email** - SMTP powered mailer with Vue SFC enabled templating, transactional email template (for auth related mail)
+- **Server Logs** - Server-side logging util, nitro-related server errors automatically logged via plugin, log file rotation
+- **Client-side error handling** - App-level plugin with custom `$fetch()` configuration providing error toast messages based on request/response status code, automatic CSRF protection, and user authentication status checks - /login redirect with failed auth on protected /api/app routes
 
 ### Tech Stack
 
--   [Nuxt UI](https://ui.nuxt.com)
--   [Better Auth](https://www.better-auth.com/)
--   [Drizzle ORM](https://orm.drizzle.team/)
--   [Nodemailer](https://nodemailer.com/)
--   [Vue Email](https://vuemail.net/)
--   [Winston Logger](https://github.com/winstonjs/winston)
--   [Zod Schema Validation](https://zod.dev/)
+- [Nuxt UI](https://ui.nuxt.com)
+- [Better Auth](https://www.better-auth.com/)
+- [Drizzle ORM](https://orm.drizzle.team/)
+- [Nodemailer](https://nodemailer.com/)
+- [Vue Email](https://vuemail.net/)
+- [Winston Logger](https://github.com/winstonjs/winston)
+- [Zod Schema Validation](https://zod.dev/)
 
 ### Setup
 
 #### Environment Variables
+
 **Unix/Mac**
+
 ```shell
 cp .env.example .env
 ```
 
 **Windows**
+
 ```shell
 copy .env.example .env
 ```

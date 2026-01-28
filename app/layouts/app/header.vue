@@ -2,7 +2,6 @@
 const config = useRuntimeConfig()
 const authStore = useAuthStore()
 const { subPageNavItems, navMenuItems, userMenuItems } = useAppLayout()
-// TODO: mobile nav links
 </script>
 
 <template>
@@ -40,6 +39,14 @@ const { subPageNavItems, navMenuItems, userMenuItems } = useAppLayout()
                         :label="authStore?.user?.name"
                     />
                 </UDropdownMenu>
+            </template>
+
+            <template #body>
+                <UNavigationMenu
+                    :items="navMenuItems.flat()"
+                    orientation="vertical"
+                    class="-mx-2.5"
+                />
             </template>
         </UHeader>
 

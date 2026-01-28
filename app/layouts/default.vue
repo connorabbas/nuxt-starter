@@ -2,7 +2,14 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 
 const config = useRuntimeConfig()
-const items: NavigationMenuItem[] = [] // add nav items as needed
+const items: NavigationMenuItem[] = [
+    {
+        label: 'Feedback',
+        icon: 'i-lucide-message-circle',
+        to: `${config.public.repoURL}/issues`,
+        target: '_blank'
+    }
+]
 </script>
 
 <template>

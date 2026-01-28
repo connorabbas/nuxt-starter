@@ -52,7 +52,11 @@ function dismissAccountDeletedAlert() {
                 color: 'neutral',
                 variant: 'subtle'
             }]"
-        />
+        >
+            <template #top>
+                <HeroBackground />
+            </template>
+        </UPageHero>
         <UPageSection
             id="features"
             title="Everything you need to build modern Nuxt apps"
