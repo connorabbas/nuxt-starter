@@ -95,7 +95,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                 <UFormField
                     label="Phone"
                     name="phone"
-                    hint="(Should fail on server validation)"
+                    hint="(Should simulate failure from server validation)"
                     required
                 >
                     <UInput

@@ -53,11 +53,7 @@ async function submitNewPassword(event: FormSubmitEvent<PasswordSchema>) {
             }
         })
 
-        if (
-            error
-            && error.status === 422
-            && error?.message
-        ) {
+        if (error?.status === 422 && error?.message) {
             form.value?.setErrors([{ name: 'new', message: error.message }])
             return
         }

@@ -50,24 +50,6 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
         const nameChanged = event.data.name !== authStore.user?.name
         const emailChanged = event.data.email !== authStore.user?.email
 
-        // Update name if changed
-        if (nameChanged) {
-            const { error: nameError } = await authClient.updateUser({
-                name: event.data.name,
-                fetchOptions: {
-                    headers: { 'csrf-token': csrf }
-                }
-            })
-            if (
-                nameError
-                && nameError.status === 422
-                && nameError?.message
-            ) {
-                form.value?.setErrors([{ name: 'name', message: nameError.message }])
-                return
-            }
-        }
-
         // Update email if changed
         if (emailChanged) {
             const { error: emailError } = await authClient.changeEmail({
@@ -77,12 +59,22 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                     headers: { 'csrf-token': csrf }
                 }
             })
-            if (
-                emailError
-                && emailError.status === 422
-                && emailError?.message
-            ) {
+            if (emailError?.status === 422 && emailError?.message) {
                 form.value?.setErrors([{ name: 'email', message: emailError.message }])
+                return
+            }
+        }
+
+        // Update name if changed
+        if (nameChanged) {
+            const { error: nameError } = await authClient.updateUser({
+                name: event.data.name,
+                fetchOptions: {
+                    headers: { 'csrf-token': csrf }
+                }
+            })
+            if (nameError?.status === 422 && nameError?.message) {
+                form.value?.setErrors([{ name: 'name', message: nameError.message }])
                 return
             }
         }
