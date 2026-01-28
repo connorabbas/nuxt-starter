@@ -38,7 +38,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
     <UContainer class="flex flex-col gap-4 sm:gap-6 w-full lg:max-w-2xl mx-auto">
         <UPageCard
             title="Example"
-            description="Form with server-side Zed validations mapped into the form (phone should fail)"
+            description="Form with server-side Zod validations mapped into the form (phone # should fail)"
             variant="subtle"
             :ui="{
                 header: 'w-full'
