@@ -1,3 +1,4 @@
+// server/database/schema/auth.ts
 import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core'
 import { createUpdateSchema } from 'drizzle-zod'
 

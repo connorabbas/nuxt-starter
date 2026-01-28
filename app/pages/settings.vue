@@ -5,16 +5,24 @@ definePageMeta({
     layout: 'app',
     middleware: ['auth'],
     pageTitle: 'Settings',
-    subPageNavItems: [{
-        label: 'General',
-        icon: 'i-lucide-user',
-        to: '/settings',
-        exact: true
-    }, {
-        label: 'Security',
-        icon: 'i-lucide-shield',
-        to: '/settings/security'
-    }] satisfies NavigationMenuItem[]
+    subPageNavItems: [
+        {
+            label: 'General',
+            icon: 'i-lucide-user',
+            to: '/settings',
+            exact: true
+        },
+        {
+            label: 'Security',
+            icon: 'i-lucide-shield',
+            to: '/settings/security'
+        },
+        {
+            label: 'Example',
+            icon: 'i-lucide-flask-conical',
+            to: '/settings/example'
+        }
+    ] satisfies NavigationMenuItem[]
 })
 </script>
 

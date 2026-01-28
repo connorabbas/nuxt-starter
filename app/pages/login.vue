@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { authClient } from '~/lib/auth-client'
 import { z } from 'zod'
 import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
-import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
     layout: 'auth',
@@ -45,8 +45,7 @@ const schema = z.object({
     password: z.string('Password is required').min(8, 'Must be at least 8 characters'),
     rememberMe: z.boolean().optional()
 })
-
-type Schema = z.output<typeof schema>
+type LoginSchema = z.output<typeof schema>
 
 const serverError = ref('')
 const submitting = ref(false)
@@ -55,7 +54,7 @@ const redirectTo = computed(() => {
     return redirect || '/dashboard'
 })
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<LoginSchema>) {
     if (submitting.value) return
     submitting.value = true
     serverError.value = ''
@@ -79,9 +78,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             serverError.value = error.message || error.statusText
             return
         }
-    } catch (error) {
+    } catch (err) {
         serverError.value = 'An unexpected error occurred. Please try again.'
-        console.error('Login error:', error)
+        console.error('Login error:', err)
     } finally {
         submitting.value = false
     }

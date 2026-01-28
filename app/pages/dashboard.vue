@@ -21,15 +21,25 @@ onMounted(() => {
     }
 })
 
-// Example authenticated application-level data fetching utilizing route prefix (see auth server middleware)
-const { data, error, status, execute: fetchExample } = await useFetch('/api/app/example', {
-    immediate: false
-})
+// Example authenticated application-level data fetching
+const data = ref()
+const error = ref()
+const loading = ref(false)
+async function fetchExample() {
+    try {
+        loading.value = true
+        const response = await useNuxtApp().$appFetch('/api/app/fetch-example')
+        data.value = response
+    } catch (err: unknown) {
+        error.value = err
+    } finally {
+        loading.value = false
+    }
+}
 
-const fetchingExample = computed(() => status.value === 'pending')
 const errorMessage = computed(() => {
     if (!error.value) return ''
-    return error.value.data?.statusMessage || error.value.statusText || error.value.message || 'An error occurred'
+    return error.value.data?.statusMessage || error.value.message || 'An error occurred'
 })
 
 function dismissError() {
@@ -71,7 +81,7 @@ function dismissError() {
                 class="justify-center"
                 label="Test - Fetch Example"
                 icon="i-lucide-flask-conical"
-                :loading="fetchingExample"
+                :loading="loading"
                 @click="fetchExample()"
             />
             <div v-if="data">

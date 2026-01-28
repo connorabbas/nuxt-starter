@@ -2,6 +2,7 @@
 const config = useRuntimeConfig()
 const authStore = useAuthStore()
 const { subPageNavItems, navMenuItems, userMenuItems } = useAppLayout()
+// TODO: mobile nav links
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { authClient } from '~/lib/auth-client'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { z } from 'zod'
-import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
     layout: 'app',
@@ -29,7 +29,6 @@ function dismissEmailAlert() {
 }
 
 const updating = ref(false)
-const serverError = ref('')
 const settings = reactive({
     name: authStore.user?.name,
     email: authStore.user?.email
@@ -41,10 +40,11 @@ const settingsSchema = z.object({
 })
 type SettingsSchema = z.output<typeof settingsSchema>
 
+const form = useTemplateRef('form')
+
 async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
     if (updating.value) return
     updating.value = true
-    serverError.value = ''
 
     try {
         const nameChanged = event.data.name !== authStore.user?.name
@@ -58,9 +58,12 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                     headers: { 'csrf-token': csrf }
                 }
             })
-
-            if (nameError) {
-                serverError.value = nameError.message || nameError.statusText
+            if (
+                nameError
+                && nameError.status === 422
+                && nameError?.message
+            ) {
+                form.value?.setErrors([{ name: 'name', message: nameError.message }])
                 return
             }
         }
@@ -74,9 +77,12 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                     headers: { 'csrf-token': csrf }
                 }
             })
-
-            if (emailError) {
-                serverError.value = emailError.message || emailError.statusText
+            if (
+                emailError
+                && emailError.status === 422
+                && emailError?.message
+            ) {
+                form.value?.setErrors([{ name: 'email', message: emailError.message }])
                 return
             }
         }
@@ -106,6 +112,8 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                 icon: 'i-lucide-circle-check-big'
             })
         }
+    } catch (err) {
+        console.error('Updating user/email error:', err)
     } finally {
         updating.value = false
     }
@@ -133,21 +141,11 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                 header: 'w-full'
             }"
         >
-            <template
-                v-if="serverError"
-                #header
-            >
-                <UAlert
-                    color="error"
-                    variant="subtle"
-                    title="Error"
-                    :description="serverError"
-                    icon="i-lucide-circle-x"
-                />
-            </template>
             <UForm
+                ref="form"
                 :schema="settingsSchema"
                 :state="settings"
+                :validate-on="[]"
                 class="flex flex-col gap-4 max-w-sm"
                 @submit="submitSettings"
             >

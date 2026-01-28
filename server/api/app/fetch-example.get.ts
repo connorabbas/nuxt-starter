@@ -5,8 +5,8 @@ export default defineEventHandler(async (event) => {
 
     // Test error handling on front-end
     /* throw createError({
-        statusCode: 500,
-        statusMessage: 'Example Error'
+        status: 500,
+        message: 'Example Error TEST'
     }) */
 
     return { test: 'Example application API route', user, session }
