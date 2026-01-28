@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { authClient } from '~/lib/auth-client'
 import { z } from 'zod'
 import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui'
-import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
     layout: 'auth',
@@ -38,6 +38,7 @@ const fields: AuthFormField[] = [{
     required: true
 }]
 
+// TODO: password enhancement: https://www.better-auth.com/docs/authentication/email-password#configuration
 const schema = z.object({
     name: z.string('Name is required').min(5),
     email: z.email('Invalid email format'),
@@ -47,16 +48,17 @@ const schema = z.object({
     message: 'Password confirmation does not match',
     path: ['confirmPassword']
 })
+type SignUpSchema = z.output<typeof schema>
 
-type Schema = z.output<typeof schema>
+const form = useTemplateRef('form')
 
-const serverError = ref('')
+const generalError = ref('')
 const submitting = ref(false)
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<SignUpSchema>) {
     if (submitting.value) return
     submitting.value = true
-    serverError.value = ''
+    generalError.value = ''
 
     try {
         const { error } = await authClient.signUp.email({
@@ -69,8 +71,25 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             }
         })
 
+        if (
+            error
+            && error.status >= 400
+            && error.status < 500
+            && error?.code
+            && error?.message
+        ) {
+            if (error.code.toLowerCase().includes('password')) {
+                form.value?.formRef?.setErrors([{ name: 'password', message: error.message }])
+                return
+            }
+            if (error.code.toLowerCase().includes('email')) {
+                form.value?.formRef?.setErrors([{ name: 'email', message: error.message }])
+                return
+            }
+        }
+
         if (error) {
-            serverError.value = error.message || error.statusText
+            generalError.value = error.message || error.statusText
             return
         }
 
@@ -85,9 +104,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         } else {
             navigateTo('/dashboard')
         }
-    } catch (error) {
-        serverError.value = 'An unexpected error occurred. Please try again.'
-        console.error('Sign up error:', error)
+    } catch (err) {
+        generalError.value = 'An unexpected error occurred. Please try again.'
+        console.error('Sign up error:', err)
     } finally {
         submitting.value = false
     }
@@ -96,6 +115,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
     <UAuthForm
+        ref="form"
         :schema="schema"
         :fields="fields"
         :loading="submitting"
@@ -114,11 +134,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         </template>
         <template #validation>
             <UAlert
-                v-if="serverError"
+                v-if="generalError"
                 color="error"
                 variant="subtle"
                 title="Error"
-                :description="serverError"
+                :description="generalError"
                 icon="i-lucide-circle-x"
             />
         </template>

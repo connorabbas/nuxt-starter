@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { authClient } from '~/lib/auth-client'
 import { z } from 'zod'
 import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui'
-import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
     layout: 'auth',
@@ -25,13 +25,12 @@ const fields: AuthFormField[] = [{
 const schema = z.object({
     email: z.email('Invalid email format')
 })
-
-type Schema = z.output<typeof schema>
+type VerifyEmailSchema = z.output<typeof schema>
 
 const serverError = ref('')
 const submitting = ref(false)
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<VerifyEmailSchema>) {
     if (submitting.value) return
     submitting.value = true
     serverError.value = ''
@@ -55,9 +54,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })
-    } catch (error) {
+    } catch (err) {
         serverError.value = 'An unexpected error occurred. Please try again.'
-        console.error('Send verification email error:', error)
+        console.error('Send verification email error:', err)
     } finally {
         submitting.value = false
     }

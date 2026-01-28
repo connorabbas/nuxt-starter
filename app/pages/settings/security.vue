@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { authClient } from '~/lib/auth-client'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { z } from 'zod'
-import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
     layout: 'app',
@@ -14,7 +14,6 @@ const { csrf } = useCsrf()
 const authStore = useAuthStore()
 
 const updating = ref(false)
-const serverError = ref('')
 const isDeleteModalOpen = ref(false)
 const deleting = ref(false)
 const deleteError = ref('')
@@ -30,8 +29,9 @@ const passwordSchema = z.object({
     message: 'New password must be different from current password',
     path: ['new']
 })
-
 type PasswordSchema = z.output<typeof passwordSchema>
+
+const form = useTemplateRef('form')
 
 const password = reactive<Partial<PasswordSchema>>({
     current: undefined,
@@ -42,7 +42,6 @@ const password = reactive<Partial<PasswordSchema>>({
 async function submitNewPassword(event: FormSubmitEvent<PasswordSchema>) {
     if (updating.value) return
     updating.value = true
-    serverError.value = ''
 
     try {
         const { error } = await authClient.changePassword({
@@ -54,8 +53,12 @@ async function submitNewPassword(event: FormSubmitEvent<PasswordSchema>) {
             }
         })
 
-        if (error) {
-            serverError.value = error.message || error.statusText
+        if (
+            error
+            && error.status === 422
+            && error?.message
+        ) {
+            form.value?.setErrors([{ name: 'new', message: error.message }])
             return
         }
 
@@ -73,9 +76,8 @@ async function submitNewPassword(event: FormSubmitEvent<PasswordSchema>) {
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })
-    } catch (error) {
-        serverError.value = 'An unexpected error occurred. Please try again.'
-        console.error('Password change error:', error)
+    } catch (err) {
+        console.error('Password change error:', err)
     } finally {
         updating.value = false
     }
@@ -87,6 +89,7 @@ async function handleDeleteAccount() {
     deleteError.value = ''
 
     try {
+        // sends the confirmation email to delete the user account
         const { error } = await authClient.deleteUser({
             callbackURL: '/?account_deleted=true',
             fetchOptions: {
@@ -95,6 +98,7 @@ async function handleDeleteAccount() {
         })
 
         if (error) {
+            console.error(error)
             deleteError.value = error.message || error.statusText
             return
         }
@@ -106,9 +110,9 @@ async function handleDeleteAccount() {
             color: 'success',
             icon: 'i-lucide-circle-check-big'
         })
-    } catch (error) {
+    } catch (err) {
         deleteError.value = 'An unexpected error occurred. Please try again.'
-        console.error('Delete account error:', error)
+        console.error('Delete account error:', err)
     } finally {
         deleting.value = false
     }
@@ -125,21 +129,11 @@ async function handleDeleteAccount() {
                 header: 'w-full'
             }"
         >
-            <template
-                v-if="serverError"
-                #header
-            >
-                <UAlert
-                    color="error"
-                    variant="subtle"
-                    title="Error"
-                    :description="serverError"
-                    icon="i-lucide-circle-x"
-                />
-            </template>
             <UForm
+                ref="form"
                 :schema="passwordSchema"
                 :state="password"
+                :validate-on="[]"
                 class="flex flex-col gap-4 max-w-sm"
                 @submit="submitNewPassword"
             >

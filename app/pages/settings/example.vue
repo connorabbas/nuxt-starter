@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
-import type { Form } from '#ui/types'
 import { updateExampleSettingsSchema, type UpdateExampleSettingsInput } from '#shared/schemas/example-settings.schema'
 
-const form = useTemplateRef<Form<UpdateExampleSettingsInput>>('form')
+const form = useTemplateRef('form')
 
 const state = reactive<UpdateExampleSettingsInput>({
     city: 'Sioux Falls',

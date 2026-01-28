@@ -1,7 +1,6 @@
+import { authClient } from '~/lib/auth-client'
 import type { User, Session } from 'better-auth'
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import { authClient } from '~/lib/auth-client'
 
 export const useAuthStore = defineStore('auth', () => {
     interface SessionData {
@@ -24,8 +23,8 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             const data = await authClient.useSession(useFetch)
             session.value = data.data.value
-        } catch (error) {
-            console.error('Fetch session error:', error)
+        } catch (err) {
+            console.error('Fetch session error:', err)
             session.value = null
         } finally {
             isPending.value = false
@@ -42,8 +41,8 @@ export const useAuthStore = defineStore('auth', () => {
                 }
             })
             session.value = freshData.data
-        } catch (error) {
-            console.error('Fetch fresh session error:', error)
+        } catch (err) {
+            console.error('Fetch fresh session error:', err)
             session.value = null
         } finally {
             isPending.value = false
@@ -88,8 +87,8 @@ export const useAuthStore = defineStore('auth', () => {
                     headers: { 'csrf-token': csrf }
                 }
             })
-        } catch (error) {
-            console.error('Sign out error:', error)
+        } catch (err) {
+            console.error('Sign out error:', err)
             // Still invalidate local session even if server request fails
             invalidateClientSession()
             navigateTo('/')

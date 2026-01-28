@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { authClient } from '~/lib/auth-client'
 import { z } from 'zod'
 import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui'
-import { authClient } from '~/lib/auth-client'
 
 definePageMeta({
     layout: 'auth',
@@ -33,8 +33,7 @@ const schema = z.object({
     message: 'Password confirmation does not match',
     path: ['confirmPassword']
 })
-
-type Schema = z.output<typeof schema>
+type ResetPwSchema = z.output<typeof schema>
 
 const serverError = ref('')
 const submitting = ref(false)
@@ -47,7 +46,7 @@ onMounted(() => {
     }
 })
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<ResetPwSchema>) {
     if (submitting.value) return
     if (!token) {
         serverError.value = 'Invalid or missing reset token. Please request a new password reset.'
@@ -78,9 +77,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             icon: 'i-lucide-circle-check-big'
         })
         navigateTo('/login')
-    } catch (error) {
+    } catch (err) {
         serverError.value = 'An unexpected error occurred. Please try again.'
-        console.error('Password reset error:', error)
+        console.error('Password reset error:', err)
     } finally {
         submitting.value = false
     }

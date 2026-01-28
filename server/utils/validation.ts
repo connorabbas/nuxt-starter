@@ -22,10 +22,10 @@ export async function validateBody<T extends z.ZodType>(
     const body = await readBody(event)
     try {
         return await schema.parseAsync(body)
-    } catch (error) {
-        if (error instanceof ZodError) {
-            sendValidationError(event, error)
+    } catch (err) {
+        if (err instanceof ZodError) {
+            sendValidationError(event, err)
         }
-        throw error
+        throw err
     }
 }
