@@ -28,7 +28,7 @@ const loading = ref(false)
 async function fetchExample() {
     try {
         loading.value = true
-        const response = await useNuxtApp().$appFetch('/api/app/example')
+        const response = await useNuxtApp().$appFetch('/api/app/fetch-example')
         data.value = response
     } catch (err: unknown) {
         error.value = err

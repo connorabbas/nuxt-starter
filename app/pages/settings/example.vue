@@ -18,7 +18,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
     loading.value = true
 
     try {
-        await useNuxtApp().$appFetch('/api/app/validation-example', {
+        await useNuxtApp().$appFetch('/api/app/form-validation-example', {
             method: 'PUT',
             body: event.data
         })
