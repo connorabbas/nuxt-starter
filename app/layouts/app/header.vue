@@ -57,7 +57,6 @@ const { subPageNavItems, navMenuItems, userMenuItems } = useAppLayout()
             <UContainer>
                 <UNavigationMenu
                     class="w-full -mx-2.5"
-                    color="neutral"
                     variant="pill"
                     :items="subPageNavItems"
                     :ui="{

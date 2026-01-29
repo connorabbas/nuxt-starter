@@ -4,7 +4,7 @@ export default defineAppConfig({
             primary: 'blue',
             secondary: 'purple',
             tertiary: 'indigo',
-            neutral: 'zinc'
+            neutral: 'neutral'
         }
     }
 })

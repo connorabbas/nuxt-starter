@@ -31,15 +31,6 @@ const fields: AuthFormField[] = [{
     defaultValue: true
 }]
 
-// TODO: GitHub Auth
-/* const providers = [{
-    label: 'GitHub',
-    icon: 'i-simple-icons-github',
-    onClick: () => {
-        toast.add({ title: 'GitHub', description: 'TODO: Login with GitHub' })
-    }
-}] */
-
 const schema = z.object({
     email: z.email('Invalid email format'),
     password: z.string('Password is required').min(8, 'Must be at least 8 characters'),

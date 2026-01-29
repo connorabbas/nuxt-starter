@@ -1,9 +1,5 @@
-// server/database/schema/auth.ts
 import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core'
-import { createUpdateSchema } from 'drizzle-zod'
 
-
-// TODO: make id int/serial
 export const users = pgTable('users', {
     id: text('id').primaryKey(),
     name: text('name').notNull(),
@@ -16,8 +12,6 @@ export const users = pgTable('users', {
         .$onUpdate(() => /* @__PURE__ */ new Date())
         .notNull()
 })
-
-export const userUpdateSchema = createUpdateSchema(users)
 
 export const sessions = pgTable('sessions', {
     id: text('id').primaryKey(),

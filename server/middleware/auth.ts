@@ -2,8 +2,13 @@ import type { Session, User } from 'better-auth'
 
 export default defineEventHandler(async (event) => {
     const path = event.node.req.url || ''
+
+    // always check for fresh auth session status for /api/app requests
     if (path.startsWith('/api/app/')) {
         const session = await auth.api.getSession({
+            query: {
+                disableCookieCache: true
+            },
             headers: event.headers
         })
 
