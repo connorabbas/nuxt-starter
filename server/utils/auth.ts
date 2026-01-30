@@ -1,4 +1,4 @@
-import { betterAuth } from 'better-auth'
+import { betterAuth, type BetterAuthOptions } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { sendMail } from './mailer'
 import { render } from '@vue-email/render'
@@ -8,7 +8,7 @@ import ResetPwEmail from '~/mail/auth/ResetPassword.vue'
 
 const config = useRuntimeConfig()
 
-export const auth = betterAuth({
+const authOptions: BetterAuthOptions = {
     appName: config.public.appName,
     baseURL: config.public.baseURL,
     trustedOrigins: [config.public.baseURL as string],
@@ -17,12 +17,6 @@ export const auth = betterAuth({
         provider: 'pg',
         usePlural: true
     }),
-    session: {
-        cookieCache: { // TODO: configure via runtime config...
-            enabled: true, // @see https://www.better-auth.com/docs/concepts/session-management#session-caching
-            maxAge: 5 * 60 // Cache duration in seconds (5 minutes)
-        }
-    },
     user: {
         changeEmail: {
             enabled: true
@@ -82,4 +76,16 @@ export const auth = betterAuth({
             })
         }
     }
-})
+}
+
+// https://www.better-auth.com/docs/concepts/session-management#session-caching
+const sessionCookieTTL = config.public.auth.sessionCookieCacheTTL
+if (sessionCookieTTL) {
+    authOptions.session = {}
+    authOptions.session.cookieCache = {
+        enabled: true,
+        maxAge: sessionCookieTTL * 60 // Cache duration in seconds
+    }
+}
+
+export const auth = betterAuth(authOptions)

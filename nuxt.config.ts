@@ -23,6 +23,7 @@ export default defineNuxtConfig({
             baseURL: process.env.NUXT_APP_URL,
             appName: process.env.NUXT_APP_NAME,
             auth: {
+                sessionCookieCacheTTL: Number(process.env.NUXT_BETTER_AUTH_COOKIE_CACHE_TTL || '0'),
                 mustVerifyEmail: Boolean(process.env.NUXT_BETTER_AUTH_VERIFY_EMAIL || 1),
                 redirectUserTo: '/dashboard',
                 redirectGuestTo: '/login'

@@ -8,6 +8,8 @@ export const useAuthStore = defineStore('auth', () => {
         session: Session
     }
 
+    const config = useRuntimeConfig()
+
     const session = ref<SessionData | null>(null)
     const isPending = ref(false)
     const sessionPromise = ref<Promise<void> | null>(null)
@@ -18,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     // For initial load and reactive updates
     // Uses Better Auth's cookie cache by default
-    const fetchSession = async () => {
+    async function fetchSession() {
         isPending.value = true
         try {
             const data = await authClient.useSession(useFetch)
@@ -32,7 +34,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     // Get fresh session from the database (bypasses cookie cache)
-    const fetchFreshSession = async () => {
+    async function fetchFreshSession() {
         isPending.value = true
         try {
             const freshData = await authClient.getSession({
@@ -50,7 +52,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     // Session check (for middleware) with race condition prevention
-    const ensureSession = async () => {
+    async function ensureSession() {
         // If already fetching, wait for that request
         if (sessionPromise.value) {
             return sessionPromise.value
@@ -66,16 +68,16 @@ export const useAuthStore = defineStore('auth', () => {
 
         // On client-side navigation, session is cached by Better Auth's cookie cache
         // Used if we specifically want fresh data on each page request
-        /* if (import.meta.client) {
+        if (import.meta.client && !config.public.auth.sessionCookieCacheTTL) {
             await fetchFreshSession()
-        } */
+        }
     }
 
-    const invalidateClientSession = () => {
+    function invalidateClientSession() {
         session.value = null
     }
 
-    const signOut = async () => {
+    async function signOut() {
         const { csrf } = useCsrf()
         try {
             await authClient.signOut({
@@ -89,7 +91,6 @@ export const useAuthStore = defineStore('auth', () => {
             })
         } catch (err) {
             console.error('Sign out error:', err)
-            // Still invalidate local session even if server request fails
             invalidateClientSession()
             navigateTo('/')
         }

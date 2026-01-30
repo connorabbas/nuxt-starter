@@ -3,7 +3,7 @@ import type { Transporter } from 'nodemailer'
 
 let transporter: Transporter | null = null
 
-export const getMailTransporter = () => {
+export function getMailTransporter() {
     if (transporter) return transporter
 
     const config = useRuntimeConfig()

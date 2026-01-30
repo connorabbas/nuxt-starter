@@ -15,7 +15,6 @@ const { csrf } = useCsrf()
 const route = useRoute()
 const router = useRouter()
 
-// TODO: check for error param (user_not_found)
 // Check for email verification success
 const showEmailUpdatedAlert = ref(false)
 onMounted(() => {
