@@ -38,7 +38,6 @@ const fields: AuthFormField[] = [{
     required: true
 }]
 
-// TODO: password enhancement: https://www.better-auth.com/docs/authentication/email-password#configuration
 const schema = z.object({
     name: z.string('Name is required').min(5),
     email: z.email('Invalid email format'),
