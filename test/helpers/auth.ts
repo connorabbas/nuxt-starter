@@ -2,8 +2,8 @@ import { betterAuth, type User } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { faker } from '@faker-js/faker'
 import { eq } from 'drizzle-orm'
-import { users } from '~~/server/database/schema/auth'
-import { testDb } from '../helpers/db'
+import { users } from '../../server/database/schema/auth'
+import { testDb } from './db'
 
 const testAuth = betterAuth({
     appName: process.env.NUXT_APP_NAME || 'Nuxt Starter',

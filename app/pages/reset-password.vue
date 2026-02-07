@@ -94,6 +94,8 @@ async function onSubmit(event: FormSubmitEvent<ResetPwSchema>) {
         :submit="{
             label: 'Reset password'
         }"
+        :validate-on="[]"
+        novalidate
         title="Reset password"
         icon="i-lucide-user-lock"
         @submit="onSubmit"

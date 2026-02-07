@@ -70,6 +70,8 @@ async function onSubmit(event: FormSubmitEvent<ForgotPwSchema>) {
         :submit="{
             label: 'Email password reset link'
         }"
+        :validate-on="[]"
+        novalidate
         title="Forgot password"
         icon="i-lucide-shield-question-mark"
         @submit="onSubmit"

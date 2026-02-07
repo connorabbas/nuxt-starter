@@ -121,6 +121,8 @@ async function onSubmit(event: FormSubmitEvent<SignUpSchema>) {
         :submit="{
             label: 'Submit'
         }"
+        :validate-on="[]"
+        novalidate
         title="Create an account"
         icon="i-lucide-user-plus"
         @submit="onSubmit"

@@ -71,6 +71,8 @@ async function onSubmit(event: FormSubmitEvent<VerifyEmailSchema>) {
         :submit="{
             label: 'Resend verification email'
         }"
+        :validate-on="[]"
+        novalidate
         title="Please verify your email"
         icon="i-lucide-user-check"
         @submit="onSubmit"

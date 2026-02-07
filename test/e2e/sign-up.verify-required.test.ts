@@ -79,10 +79,17 @@ describe('sign-up flow (email verification required)', async () => {
             password: '1234',
             confirmPassword: '1234'
         })
+
+        expect(await page.getByText('Invalid email format').isVisible()).toBe(false)
+        expect(await page.getByText('Must be at least 8 characters').isVisible()).toBe(false)
+
         await page.getByRole('button', { name: 'Submit' }).click()
 
         expect(await page.getByText('Invalid email format').isVisible()).toBe(true)
         expect(await page.getByText('Must be at least 8 characters').isVisible()).toBe(true)
+
+        expect(page.url()).not.toContain('/dashboard')
+        expect(page.url()).not.toContain('/verify-email')
 
         await page.locator('input[name="email"]').fill(createEmail())
         await page.locator('input[name="password"]').fill('password123456')
