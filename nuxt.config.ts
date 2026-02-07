@@ -1,4 +1,5 @@
 import vue from '@vitejs/plugin-vue'
+import { parseBooleanEnv } from './shared/utils'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -30,7 +31,7 @@ export default defineNuxtConfig({
             appName: process.env.NUXT_APP_NAME,
             auth: {
                 sessionCookieCacheTTL: Number(process.env.NUXT_BETTER_AUTH_COOKIE_CACHE_TTL || '0'),
-                mustVerifyEmail: Boolean(process.env.NUXT_BETTER_AUTH_VERIFY_EMAIL || 1),
+                mustVerifyEmail: parseBooleanEnv(process.env.NUXT_BETTER_AUTH_VERIFY_EMAIL, true),
                 redirectUserTo: '/dashboard',
                 redirectGuestTo: '/login'
             }
@@ -52,5 +53,8 @@ export default defineNuxtConfig({
         rollupConfig: {
             plugins: [vue()] // for vue-email
         }
+    },
+    csurf: {
+        methodsToProtect: process.env.NODE_ENV === 'test' ? [] : ['POST', 'PATCH', 'PUT', 'DELETE']
     }
 })

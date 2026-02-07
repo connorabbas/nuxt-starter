@@ -2,6 +2,9 @@ import type { Session, User } from 'better-auth'
 
 export default defineEventHandler(async (event) => {
     const path = event.node.req.url || ''
+    const method = (event.node.req.method || 'GET').toUpperCase()
+    const config = useRuntimeConfig()
+    const verifyEmailMethods = ['POST', 'PATCH', 'PUT', 'DELETE']
 
     // always check for fresh auth session status for /api/app requests
     if (path.startsWith('/api/app/')) {
@@ -16,6 +19,17 @@ export default defineEventHandler(async (event) => {
             throw createError({
                 status: 401,
                 message: 'Invalid User Session, please log back in.'
+            })
+        }
+
+        if (
+            verifyEmailMethods.includes(method)
+            && config.public.auth.mustVerifyEmail
+            && !session.user.emailVerified
+        ) {
+            throw createError({
+                status: 403,
+                message: 'Email verification is required to perform this action.'
             })
         }
 

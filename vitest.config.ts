@@ -3,6 +3,8 @@ import { defineVitestProject } from '@nuxt/test-utils/config'
 
 export default defineConfig({
     test: {
+        fileParallelism: false, // This will make all test files run sequentially to avoid race conditions in db
+        maxWorkers: 1,
         projects: [
             {
                 test: {
@@ -21,7 +23,11 @@ export default defineConfig({
             await defineVitestProject({
                 test: {
                     name: 'nuxt',
-                    include: ['test/nuxt/*.{test,spec}.ts'],
+                    include: [
+                        'test/nuxt/api/*.{test,spec}.ts',
+                        'test/nuxt/middleware/*.{test,spec}.ts'
+                    ],
+                    setupFiles: ['test/nuxt/setup.ts'],
                     environment: 'nuxt'
                 }
             })
