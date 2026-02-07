@@ -45,7 +45,7 @@ describe('PUT /api/app/form-validation-example', async () => {
         })
     })
 
-    it('allows verified users through auth middleware for submission routes', async () => {
+    it('allows verified user submission with expected 422 validation error', async () => {
         const user = await userFactory({ verified: true })
         const { cookie } = await actingAs(user)
 

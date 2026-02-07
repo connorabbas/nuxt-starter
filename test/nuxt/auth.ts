@@ -1,6 +1,6 @@
-import { randomUUID } from 'node:crypto'
-import { betterAuth } from 'better-auth'
+import { betterAuth, type User } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { faker } from '@faker-js/faker'
 import { eq } from 'drizzle-orm'
 import { users } from '~~/server/database/schema/auth'
 import { testDb } from '../helpers/db'
@@ -20,21 +20,21 @@ const testAuth = betterAuth({
     }
 })
 
-export interface TestUserInput {
-    name?: string
-    email?: string
+type NonEditableUserFields = 'id' | 'createdAt' | 'updatedAt' | 'emailVerified'
+type EditableUserFields = Omit<User, NonEditableUserFields>
+
+export type UserFactoryInput = Partial<EditableUserFields> & {
     password?: string
     verified?: boolean
 }
 
-export interface TestUser {
-    name: string
-    email: string
+export type TestAuthUser = User & {
     password: string
 }
 
-interface CreateTestUserOptions {
-    verified?: boolean
+type CreateTestUserInput = Pick<EditableUserFields, 'name' | 'email'> & {
+    password: string
+    image?: User['image']
 }
 
 function makeCookieHeader(headers: Headers) {
@@ -49,16 +49,16 @@ function makeCookieHeader(headers: Headers) {
     return values.join('; ')
 }
 
-function buildTestUser(input: TestUserInput = {}): TestUser {
-    const token = randomUUID()
+function buildTestUser(input: Omit<UserFactoryInput, 'verified'> = {}): CreateTestUserInput {
     return {
-        name: input.name ?? `Test User ${token.slice(0, 8)}`,
-        email: input.email ?? `test-${token}@example.com`,
-        password: input.password ?? 'password1234'
+        name: input.name ?? faker.person.fullName(),
+        email: input.email ?? faker.internet.email().toLowerCase(),
+        password: input.password ?? 'password123456',
+        image: input.image ?? faker.image.avatar()
     }
 }
 
-export async function createTestUser(user: TestUser, options: CreateTestUserOptions = {}) {
+export async function createTestUser(user: CreateTestUserInput, verified = false): Promise<TestAuthUser> {
     await testAuth.api.signUpEmail({
         body: {
             name: user.name,
@@ -67,23 +67,47 @@ export async function createTestUser(user: TestUser, options: CreateTestUserOpti
         }
     })
 
-    if (options.verified) {
+    const updateData: Partial<typeof users.$inferInsert> = {}
+
+    if (verified) {
+        updateData.emailVerified = true
+    }
+
+    if (typeof user.image !== 'undefined') {
+        updateData.image = user.image
+    }
+
+    if (Object.keys(updateData).length > 0) {
         await testDb
             .update(users)
-            .set({ emailVerified: true })
+            .set(updateData)
             .where(eq(users.email, user.email))
     }
 
-    return user
+    const [createdUser] = await testDb
+        .select()
+        .from(users)
+        .where(eq(users.email, user.email))
+        .limit(1)
+
+    if (!createdUser) {
+        throw new Error(`Unable to create test user for email: ${user.email}`)
+    }
+
+    return {
+        ...createdUser,
+        password: user.password
+    }
 }
 
-export async function userFactory(input: TestUserInput = {}) {
-    const user = buildTestUser(input)
+export async function userFactory(input: UserFactoryInput = {}): Promise<TestAuthUser> {
+    const { verified = false, ...overrides } = input
+    const user = buildTestUser(overrides)
 
-    return await createTestUser(user, { verified: input.verified })
+    return await createTestUser(user, verified)
 }
 
-export async function actingAs(user: TestUser) {
+export async function actingAs(user: TestAuthUser) {
     const signIn = await testAuth.api.signInEmail({
         body: {
             email: user.email,

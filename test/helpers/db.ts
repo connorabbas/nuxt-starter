@@ -1,8 +1,10 @@
 import dotenv from 'dotenv'
 import dotenvExpand from 'dotenv-expand'
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { getTableName, sql } from 'drizzle-orm'
+import { and, eq, getTableColumns, getTableName, sql } from 'drizzle-orm'
+import type { InferSelectModel } from 'drizzle-orm'
 import { migrate } from 'drizzle-orm/node-postgres/migrator'
+import type { AnyPgTable } from 'drizzle-orm/pg-core'
 import { Pool } from 'pg'
 import * as schema from '../../server/database/schema'
 
@@ -19,6 +21,8 @@ export const testDb = drizzle({
     casing: 'snake_case',
     schema
 })
+
+export type DatabaseWhere<TTable extends AnyPgTable> = Partial<InferSelectModel<TTable>>
 
 function getSchemaTableNames() {
     const names = Object.values(schema).flatMap((value) => {
@@ -48,6 +52,36 @@ export async function truncateAllTables() {
         .join(', ')
 
     await testDb.execute(sql.raw(`TRUNCATE TABLE ${list} RESTART IDENTITY CASCADE`))
+}
+
+export async function databaseHas<TTable extends AnyPgTable>(
+    table: TTable,
+    where: DatabaseWhere<TTable>
+) {
+    const entries = Object.entries(where).filter(([, value]) => value !== undefined)
+
+    if (entries.length === 0) {
+        throw new Error('databaseHas requires at least one where condition')
+    }
+
+    const columns = getTableColumns(table)
+    const filters = entries.map(([key, value]) => {
+        const column = columns[key as keyof typeof columns]
+
+        if (!column) {
+            throw new Error(`Unknown column '${key}' for table '${getTableName(table)}'`)
+        }
+
+        return eq(column, value)
+    })
+
+    const rows = await testDb
+        .select()
+        .from(table as never)
+        .where(and(...filters))
+        .limit(1)
+
+    return rows.length > 0
 }
 
 export async function closeTestDb() {
