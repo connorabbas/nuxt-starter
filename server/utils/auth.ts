@@ -1,6 +1,6 @@
 import { betterAuth, type BetterAuthOptions } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { sendMail } from './mailer'
+import { sendMail } from '~~/server/utils/mailer'
 import { render } from '@vue-email/render'
 import ConfirmDeleteUser from '~/mail/auth/ConfirmDeleteUser.vue'
 import WelcomeEmail from '~/mail/auth/VerifyEmail.vue'
