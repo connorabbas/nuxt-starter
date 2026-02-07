@@ -24,7 +24,8 @@
                 "shd101wyy.markdown-preview-enhanced",
                 "formulahendry.auto-rename-tag",
                 "pmneo.tsimporter",
-                "vitest.explorer"
+                "vitest.explorer",
+                "ms-playwright.playwright"
             ],
             "settings": {
                 "terminal.integrated.shell.linux": "/bin/bash",
