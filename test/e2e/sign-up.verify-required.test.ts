@@ -1,16 +1,9 @@
-import { faker } from '@faker-js/faker'
 import { beforeEach, afterAll, describe, expect, it } from 'vitest'
 import { $fetch, createPage, setup } from '@nuxt/test-utils/e2e'
 import { expectMailSent, waitForMailCount } from './assertions'
+import { createUniqueEmail } from '../helpers/utils'
 import { getSentMails, resetSentMails, startMailFake, stopMailFake } from '../helpers/mail-fake'
-import { applyProcessEnv, createSignUpE2EEnv } from './helpers/env'
-
-function createEmail() {
-    const email = faker.internet.email().toLowerCase()
-    const [localPart, domain] = email.split('@')
-
-    return `${localPart}+${Date.now()}-${Math.random().toString(36).slice(2, 8)}@${domain}`
-}
+import { applyProcessEnv, createFakeMailSMTPEnv } from './helpers/env'
 
 async function fillSignUpForm(
     page: Awaited<ReturnType<typeof createPage>>,
@@ -24,7 +17,7 @@ async function fillSignUpForm(
 
 describe('sign-up flow (email verification required)', async () => {
     const smtp = await startMailFake()
-    const env = createSignUpE2EEnv(smtp, true)
+    const env = createFakeMailSMTPEnv(smtp, true)
     const restoreProcessEnv = applyProcessEnv(env)
 
     await setup({
@@ -45,7 +38,7 @@ describe('sign-up flow (email verification required)', async () => {
     })
 
     it('redirects to verify-email and sends verification email', async () => {
-        const email = createEmail()
+        const email = createUniqueEmail('sign-up-required')
         const page = await createPage('/sign-up')
 
         await fillSignUpForm(page, {
@@ -91,7 +84,7 @@ describe('sign-up flow (email verification required)', async () => {
         expect(page.url()).not.toContain('/dashboard')
         expect(page.url()).not.toContain('/verify-email')
 
-        await page.locator('input[name="email"]').fill(createEmail())
+        await page.locator('input[name="email"]').fill(createUniqueEmail('sign-up-validation'))
         await page.locator('input[name="password"]').fill('password123456')
         await page.locator('input[name="confirmPassword"]').fill('password000000')
         await page.getByRole('button', { name: 'Submit' }).click()
@@ -100,7 +93,7 @@ describe('sign-up flow (email verification required)', async () => {
     })
 
     it('shows duplicate email validation from the server', async () => {
-        const email = createEmail()
+        const email = createUniqueEmail('sign-up-duplicate')
 
         await $fetch('/api/auth/sign-up/email', {
             method: 'POST',

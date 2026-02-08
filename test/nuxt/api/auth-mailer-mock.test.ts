@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import { faker } from '@faker-js/faker'
 import { expectMailMockSent, expectMailMockSentTimes } from '../assertions'
 import { testDb } from '../../helpers/db'
+import { createUniqueEmail } from '../../helpers/utils'
 
 const mailMock = vi.hoisted(() => {
     const sendMailMock = vi.fn(async (_payload: {
@@ -39,13 +39,6 @@ function mockedMailerModule() {
 vi.mock('~/server/utils/mailer', () => mockedMailerModule())
 vi.mock('~~/server/utils/mailer', () => mockedMailerModule())
 
-function createEmail(prefix = 'nuxt-mail-mock') {
-    const email = faker.internet.email().toLowerCase()
-    const [localPart, domain] = email.split('@')
-
-    return `${localPart}+${prefix}-${Date.now()}@${domain}`
-}
-
 describe('auth mailer integration with vi.mock', () => {
     let auth: Awaited<typeof import('~~/server/utils/auth')>['auth']
 
@@ -64,7 +57,7 @@ describe('auth mailer integration with vi.mock', () => {
     })
 
     it('calls mocked sendMail when signing up a user', async () => {
-        const email = createEmail('mock-send')
+        const email = createUniqueEmail('mock-send')
 
         await auth.api.signUpEmail({
             body: {
@@ -82,7 +75,7 @@ describe('auth mailer integration with vi.mock', () => {
     })
 
     it('returns duplicate user error code and does not send mail again', async () => {
-        const email = createEmail('mock-duplicate')
+        const email = createUniqueEmail('mock-duplicate')
 
         await auth.api.signUpEmail({
             body: {

@@ -4,6 +4,7 @@ import { faker } from '@faker-js/faker'
 import { eq } from 'drizzle-orm'
 import { users } from '../../server/database/schema/auth'
 import { testDb } from './db'
+import { createUniqueEmail } from './utils'
 
 const testAuth = betterAuth({
     appName: process.env.NUXT_APP_NAME || 'Nuxt Starter',
@@ -52,7 +53,7 @@ function makeCookieHeader(headers: Headers) {
 function buildTestUser(input: Omit<UserFactoryInput, 'verified'> = {}): CreateTestUserInput {
     return {
         name: input.name ?? faker.person.fullName(),
-        email: input.email ?? faker.internet.email().toLowerCase(),
+        email: input.email ?? createUniqueEmail(),
         password: input.password ?? 'password123456',
         image: input.image ?? faker.image.avatar()
     }

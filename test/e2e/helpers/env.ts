@@ -9,7 +9,7 @@ const defaultMailEnv = {
     NUXT_SMTP_MAIL_PASSWORD: 'test-password'
 }
 
-export function createSignUpE2EEnv(mailServer: MailServerConfig, mustVerifyEmail: boolean) {
+export function createFakeMailSMTPEnv(mailServer: MailServerConfig, mustVerifyEmail: boolean) {
     return {
         NUXT_BETTER_AUTH_VERIFY_EMAIL: String(mustVerifyEmail),
         NUXT_SMTP_MAIL_FROM: defaultMailEnv.NUXT_SMTP_MAIL_FROM,

@@ -1,15 +1,8 @@
-import { faker } from '@faker-js/faker'
 import { afterAll, describe, expect, it } from 'vitest'
 import { createPage, setup } from '@nuxt/test-utils/e2e'
+import { createUniqueEmail } from '../helpers/utils'
 import { startMailFake, stopMailFake } from '../helpers/mail-fake'
-import { applyProcessEnv, createSignUpE2EEnv } from './helpers/env'
-
-function createEmail() {
-    const email = faker.internet.email().toLowerCase()
-    const [localPart, domain] = email.split('@')
-
-    return `${localPart}+${Date.now()}-${Math.random().toString(36).slice(2, 8)}@${domain}`
-}
+import { applyProcessEnv, createFakeMailSMTPEnv } from './helpers/env'
 
 async function fillSignUpForm(
     page: Awaited<ReturnType<typeof createPage>>,
@@ -23,7 +16,7 @@ async function fillSignUpForm(
 
 describe('sign-up flow (email verification disabled)', async () => {
     const smtp = await startMailFake()
-    const env = createSignUpE2EEnv(smtp, false)
+    const env = createFakeMailSMTPEnv(smtp, false)
     const restoreProcessEnv = applyProcessEnv(env)
 
     await setup({
@@ -40,7 +33,7 @@ describe('sign-up flow (email verification disabled)', async () => {
     })
 
     it('redirects to dashboard after successful signup', async () => {
-        const email = createEmail()
+        const email = createUniqueEmail('sign-up-disabled')
         const page = await createPage('/sign-up')
 
         await fillSignUpForm(page, {
