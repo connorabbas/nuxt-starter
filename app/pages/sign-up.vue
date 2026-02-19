@@ -15,12 +15,14 @@ const toast = useToast()
 const fields: AuthFormField[] = [{
     name: 'name',
     type: 'text',
+    autocomplete: 'name',
     label: 'Name',
     placeholder: 'Enter your name',
     required: true
 }, {
     name: 'email',
     type: 'email',
+    autocomplete: 'email',
     label: 'Email',
     placeholder: 'Enter your email',
     required: true
@@ -28,12 +30,14 @@ const fields: AuthFormField[] = [{
     name: 'password',
     label: 'Password',
     type: 'password',
+    autocomplete: 'new-password',
     placeholder: 'Enter your password',
     required: true
 }, {
     name: 'confirmPassword',
     label: 'Confirm Password',
     type: 'password',
+    autocomplete: 'new-password',
     placeholder: 'Confirm your password',
     required: true
 }]

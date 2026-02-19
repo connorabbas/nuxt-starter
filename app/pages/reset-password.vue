@@ -16,12 +16,14 @@ const fields: AuthFormField[] = [{
     name: 'password',
     label: 'Password',
     type: 'password',
+    autocomplete: 'new-password',
     placeholder: 'Enter your password',
     required: true
 }, {
     name: 'confirmPassword',
     label: 'Confirm Password',
     type: 'password',
+    autocomplete: 'new-password',
     placeholder: 'Confirm your password',
     required: true
 }]

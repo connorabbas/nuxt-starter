@@ -140,6 +140,7 @@ async function handleDeleteAccount() {
                     <UInput
                         v-model="password.current"
                         type="password"
+                        autocomplete="current-password"
                         placeholder="Enter current password"
                         class="w-full"
                     />
@@ -151,6 +152,7 @@ async function handleDeleteAccount() {
                     <UInput
                         v-model="password.new"
                         type="password"
+                        autocomplete="new-password"
                         placeholder="Enter new password"
                         class="w-full"
                     />
@@ -162,6 +164,7 @@ async function handleDeleteAccount() {
                     <UInput
                         v-model="password.confirm"
                         type="password"
+                        autocomplete="new-password"
                         placeholder="Confirm new password"
                         class="w-full"
                     />

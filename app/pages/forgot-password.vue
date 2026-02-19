@@ -15,6 +15,7 @@ const { csrf } = useCsrf()
 const fields: AuthFormField[] = [{
     name: 'email',
     type: 'email',
+    autocomplete: 'email',
     label: 'Email',
     placeholder: 'Enter your email',
     required: true

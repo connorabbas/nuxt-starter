@@ -147,6 +147,7 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                     <UInput
                         v-model="settings.name"
                         type="text"
+                        autocomplete="name"
                         placeholder="Your name"
                         class="w-full"
                     />
@@ -159,6 +160,7 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                     <UInput
                         v-model="settings.email"
                         type="email"
+                        autocomplete="email"
                         placeholder="Your email"
                         class="w-full"
                     />
