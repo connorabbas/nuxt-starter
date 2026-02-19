@@ -61,38 +61,28 @@ const groups = computed(() => [{
 
             <template #footer="{ collapsed }">
                 <UDropdownMenu
+                    v-if="authStore.user"
                     :items="userMenuItems"
                     :content="{ align: 'center', collisionPadding: 12 }"
                     :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
                 >
-                    <UButton
-                        v-bind="{
-                            ...authStore.user,
-                            label: collapsed ? undefined : authStore.user?.name,
-                            trailingIcon: collapsed ? undefined : 'i-lucide-chevrons-up-down'
-                        }"
-                        class="data-[state=open]:bg-elevated"
-                        color="neutral"
-                        variant="ghost"
-                        block
-                        :icon="collapsed ? 'i-lucide-user' : null"
-                        :square="collapsed"
-                        :ui="{
-                            trailingIcon: 'text-dimmed'
-                        }"
-                    />
-
-                    <template #chip-leading="{ item }">
-                        <div class="inline-flex items-center justify-center shrink-0 size-5">
-                            <span
-                                class="rounded-full ring ring-bg bg-(--chip-light) dark:bg-(--chip-dark) size-2"
-                                :style="{
-                                    '--chip-light': `var(--color-${(item as any).chip}-500)`,
-                                    '--chip-dark': `var(--color-${(item as any).chip}-400)`
-                                }"
-                            />
-                        </div>
-                    </template>
+                    <UTooltip
+                        :disabled="!collapsed"
+                        :content="{ side: 'right' }"
+                        text="Account"
+                    >
+                        <UButton
+                            class="data-[state=open]:bg-elevated"
+                            color="neutral"
+                            variant="ghost"
+                            block
+                            :label="collapsed ? undefined : authStore.user?.name"
+                            :icon="collapsed ? 'i-lucide-user' : undefined"
+                            :trailing-icon="collapsed ? undefined : 'i-lucide-chevrons-up-down'"
+                            :square="collapsed"
+                            :ui="{ trailingIcon: 'text-dimmed' }"
+                        />
+                    </UTooltip>
                 </UDropdownMenu>
             </template>
         </UDashboardSidebar>
