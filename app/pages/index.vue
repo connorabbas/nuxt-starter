@@ -17,7 +17,7 @@ function dismissAccountDeletedAlert() {
 </script>
 
 <template>
-    <div>
+    <UPage>
         <!-- Account Deleted Success Alert -->
         <UContainer
             v-if="showAccountDeletedAlert"
@@ -108,5 +108,5 @@ function dismissAccountDeletedAlert() {
                 }]"
             />
         </UPageSection>
-    </div>
+    </UPage>
 </template>

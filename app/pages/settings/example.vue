@@ -61,6 +61,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                 >
                     <UInput
                         v-model="state.city"
+                        autocomplete="address-level2"
                         placeholder="New York"
                         class="w-full"
                     />
@@ -74,6 +75,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                     >
                         <UInput
                             v-model="state.state"
+                            autocomplete="address-level1"
                             placeholder="NY"
                             class="w-full"
                         />
@@ -86,6 +88,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                     >
                         <UInput
                             v-model="state.zip"
+                            autocomplete="postal-code"
                             placeholder="12345"
                             class="w-full"
                         />
@@ -100,6 +103,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                 >
                     <UInput
                         v-model="state.phone"
+                        autocomplete="tel"
                         placeholder="(123) 456-7890"
                         class="w-full"
                     />
@@ -111,6 +115,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                 >
                     <UInput
                         v-model="state.address"
+                        autocomplete="street-address"
                         placeholder="123 Main St"
                         class="w-full"
                     />
@@ -122,6 +127,7 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                 >
                     <UInput
                         v-model="state.address2"
+                        autocomplete="address-line2"
                         placeholder="Apt 4B"
                         class="w-full"
                     />

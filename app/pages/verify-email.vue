@@ -16,6 +16,7 @@ const presetEmail = route.query.email as string
 const fields: AuthFormField[] = [{
     name: 'email',
     type: 'email',
+    autocomplete: 'email',
     label: 'Email',
     defaultValue: presetEmail,
     placeholder: 'Enter your email',
