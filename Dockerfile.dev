@@ -9,6 +9,8 @@ RUN apk add --no-cache git openssh libc6-compat bash shadow
 
 RUN chsh -s /bin/bash node
 
+RUN npm install -g opencode-ai
+
 USER node
 
 COPY --chown=node:node .devcontainer/.bashrc /home/node/.bashrc
