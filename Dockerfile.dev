@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
 RUN npx -y playwright@1.58.2 install --with-deps chromium \
     && chown -R node:node /ms-playwright
 
+RUN npm install -g opencode-ai
+
 USER node
 
 COPY --chown=node:node .devcontainer/.bashrc /home/node/.bashrc

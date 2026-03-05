@@ -24,7 +24,7 @@
     "dependencies": {
         "@iconify-json/lucide": "^1.2.68",
         "@iconify-json/simple-icons": "^1.2.53",
-        "@nuxt/ui": "^4.3.0",
+        "@nuxt/ui": "^4.5.0",
         "@pinia/nuxt": "^0.11.2",
         "@vitejs/plugin-vue": "^6.0.1",
         "@vue-email/components": "^0.0.21",
