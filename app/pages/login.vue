@@ -42,6 +42,7 @@ type LoginSchema = z.output<typeof schema>
 
 const serverError = ref('')
 const submitting = ref(false)
+// TODO: intended route redirect
 const redirectTo = computed(() => {
     const redirect = route.query.redirect as string
     return redirect || '/dashboard'
@@ -85,6 +86,8 @@ async function onSubmit(event: FormSubmitEvent<LoginSchema>) {
         :schema="schema"
         :fields="fields"
         :providers="[]"
+        :validate-on="[]"
+        novalidate
         :loading="submitting"
         title="Welcome back!"
         icon="i-lucide-lock"

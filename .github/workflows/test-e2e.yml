@@ -1,0 +1,72 @@
+name: Test E2E
+
+on:
+  push:
+    branches: ["master", "main"]
+  pull_request:
+    branches: ["master", "main"]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    services:
+      pgsql:
+        image: postgres:17
+        env:
+          POSTGRES_DB: nuxt_auth_starter_test
+          POSTGRES_USER: nuxt_user
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U nuxt_user -d nuxt_auth_starter_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      NODE_ENV: test
+      NUXT_NITRO_PRESET: node-server
+      NITRO_TRUST_PROXY: true
+      NUXT_APP_NAME: Nuxt Starter
+      NUXT_APP_URL: http://localhost:3000
+      NUXT_APP_PORT: 3000
+      NUXT_LOG_LEVEL: debug
+      NUXT_BETTER_AUTH_SECRET: test-ci-secret
+      NUXT_BETTER_AUTH_VERIFY_EMAIL: true
+      NUXT_DB_HOST: localhost
+      NUXT_DB_PORT: 5432
+      NUXT_DB_DATABASE: nuxt_auth_starter_test
+      NUXT_DB_USERNAME: nuxt_user
+      NUXT_DB_PASSWORD: password
+      NUXT_SMTP_MAIL_FROM: nuxt-starter@example.com
+      NUXT_SMTP_MAIL_HOST: 127.0.0.1
+      NUXT_SMTP_MAIL_PORT: 1025
+      NUXT_SMTP_MAIL_USERNAME: test
+      NUXT_SMTP_MAIL_PASSWORD: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Nuxt prepare
+        run: npm run postinstall
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run DB migrations
+        run: npm run db:migrate
+
+      - name: Run E2E tests
+        run: npm run test:e2e

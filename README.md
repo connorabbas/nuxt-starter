@@ -50,3 +50,20 @@ Generate & Migrate DB tables using Drizzle:
 npm run db:generate
 npm run db:migrate
 ```
+
+#### Testing
+
+Install Playwright's Chromium browser (required once per environment before running e2e tests):
+
+```shell
+npm run test:e2e:install
+```
+
+Run end-to-end tests:
+
+```shell
+npm run test:e2e
+```
+
+> [!TIP]
+> In the provided devcontainer setup, Chromium and OS dependencies are already installed in `Dockerfile.dev`.
