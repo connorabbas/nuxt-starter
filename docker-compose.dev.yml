@@ -2,7 +2,8 @@ services:
   nuxt:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+      target: dev
     container_name: nuxt-starter
     hostname: nuxt-starter
     entrypoint: /bin/bash
@@ -44,5 +45,5 @@ volumes:
 networks:
   web:
   proxy: # setup in separate compose file
-    name: "traefik_network"
+    name: "traefik_proxy"
     external: true

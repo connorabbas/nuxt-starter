@@ -6,7 +6,8 @@ import { z } from 'zod'
 definePageMeta({
     layout: 'app',
     middleware: ['auth'],
-    pageTitle: 'Settings'
+    pageTitle: 'General',
+    description: 'Manage your profile and email preferences.'
 })
 
 const authStore = useAuthStore()
@@ -112,11 +113,10 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
 </script>
 
 <template>
-    <UContainer class="flex flex-col gap-4 sm:gap-6 w-full lg:max-w-2xl mx-auto">
+    <div>
         <UAlert
             v-if="showEmailUpdatedAlert"
             color="success"
-            variant="subtle"
             title="New email successfully verified"
             description="Your email address has been updated"
             icon="i-lucide-circle-check-big"
@@ -127,7 +127,7 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
         <UPageCard
             title="Profile"
             description="Update your account information"
-            variant="subtle"
+            class="max-w-xl"
             :ui="{
                 header: 'w-full'
             }"
@@ -137,7 +137,7 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                 :schema="settingsSchema"
                 :state="settings"
                 :validate-on="[]"
-                class="flex flex-col gap-4 max-w-sm"
+                class="flex flex-col gap-4"
                 @submit="submitSettings"
             >
                 <UFormField
@@ -174,5 +174,5 @@ async function submitSettings(event: FormSubmitEvent<SettingsSchema>) {
                 />
             </UForm>
         </UPageCard>
-    </UContainer>
+    </div>
 </template>

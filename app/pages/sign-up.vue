@@ -139,7 +139,6 @@ async function onSubmit(event: FormSubmitEvent<SignUpSchema>) {
             <UAlert
                 v-if="generalError"
                 color="error"
-                variant="subtle"
                 title="Error"
                 :description="generalError"
                 icon="i-lucide-circle-x"

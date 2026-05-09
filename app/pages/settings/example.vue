@@ -2,6 +2,13 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { updateExampleSettingsSchema, type UpdateExampleSettingsInput } from '#shared/schemas/example-settings.schema'
 
+definePageMeta({
+    layout: 'app',
+    middleware: ['auth'],
+    pageTitle: 'Example',
+    description: 'Form validation with server-side Zod schemas.'
+})
+
 const form = useTemplateRef('form')
 
 const state = reactive<UpdateExampleSettingsInput>({
@@ -35,11 +42,11 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
 </script>
 
 <template>
-    <UContainer class="flex flex-col gap-4 sm:gap-6 w-full lg:max-w-2xl mx-auto">
+    <div>
         <UPageCard
             title="Example"
             description="Form with server-side Zod validations mapped into the form"
-            variant="subtle"
+            class="max-w-xl"
             :ui="{
                 header: 'w-full'
             }"
@@ -150,5 +157,5 @@ async function onSubmit(event: FormSubmitEvent<UpdateExampleSettingsInput>) {
                 </div>
             </UForm>
         </UPageCard>
-    </UContainer>
+    </div>
 </template>

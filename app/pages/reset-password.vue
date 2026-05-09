@@ -107,7 +107,6 @@ async function onSubmit(event: FormSubmitEvent<ResetPwSchema>) {
             <UAlert
                 v-if="serverError"
                 color="error"
-                variant="subtle"
                 title="Error"
                 :description="serverError"
                 icon="i-lucide-circle-x"
