@@ -8,6 +8,7 @@
     "workspaceFolder": "/workspace",
     "mounts": [
         "type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/node/.ssh,readonly",
+        "type=bind,source=/home/${localEnv:USER}/.gitconfig,target=/home/node/.gitconfig,readonly",
         "type=bind,source=/home/${localEnv:USER}/.config/opencode,target=/home/node/.config/opencode",
         "type=bind,source=/home/${localEnv:USER}/.local/share/opencode,target=/home/node/.local/share/opencode",
         "type=bind,source=/home/${localEnv:USER}/.local/state/opencode,target=/home/node/.local/state/opencode"
@@ -31,9 +32,8 @@
             "settings": {
                 "terminal.integrated.shell.linux": "/bin/bash",
                 "html.format.wrapAttributes": "force-expand-multiline",
-                "typescript.preferences.quoteStyle": "single",
-                "javascript.format.semicolons": "remove",
-                "typescript.format.semicolons": "remove",
+                "js/ts.preferences.quoteStyle": "single",
+                "js/ts.format.semicolons": "remove",
                 "[vue]": {
                     "editor.defaultFormatter": "Vue.volar",
                     "editor.tabSize": 4
