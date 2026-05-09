@@ -1,4 +1,17 @@
 <script setup>
+const config = useRuntimeConfig()
+const route = useRoute()
+
+const appName = config.public.appName || 'Nuxt Starter Template'
+const defaultDescription = 'A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours.'
+
+const title = computed(() => {
+    const pageTitle = route.meta.pageTitle
+    return pageTitle ? `${pageTitle} - ${appName}` : appName
+})
+
+const description = computed(() => route.meta.description || defaultDescription)
+
 useHead({
     meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
@@ -10,9 +23,6 @@ useHead({
         lang: 'en'
     }
 })
-
-const title = 'Nuxt Starter Template'
-const description = 'A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours.'
 
 useSeoMeta({
     title,

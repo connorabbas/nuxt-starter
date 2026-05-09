@@ -6,7 +6,8 @@ import { z } from 'zod'
 definePageMeta({
     layout: 'app',
     middleware: ['auth'],
-    pageTitle: 'Password Settings'
+    pageTitle: 'Security',
+    description: 'Update your password and secure your account.'
 })
 
 const toast = useToast()
@@ -116,11 +117,11 @@ async function handleDeleteAccount() {
 </script>
 
 <template>
-    <UContainer class="flex flex-col gap-4 sm:gap-6 w-full lg:max-w-2xl mx-auto">
+    <div class="flex flex-col gap-6 sm:gap-8">
         <UPageCard
             title="Password"
             description="Confirm your current password before setting a new one."
-            variant="subtle"
+            class="max-w-xl"
             :ui="{
                 header: 'w-full'
             }"
@@ -130,7 +131,7 @@ async function handleDeleteAccount() {
                 :schema="passwordSchema"
                 :state="password"
                 :validate-on="[]"
-                class="flex flex-col gap-4 max-w-sm"
+                class="flex flex-col gap-4"
                 @submit="submitNewPassword"
             >
                 <UFormField
@@ -181,7 +182,7 @@ async function handleDeleteAccount() {
         <UPageCard
             title="Account"
             description="No longer want to use our service? You can delete your account here. This action is not reversible. All information related to this account will be deleted permanently."
-            class="bg-gradient-to-tl from-error/10 from-5% to-default"
+            class="bg-gradient-to-tl from-error/10 from-5% to-default max-w-xl"
         >
             <template #footer>
                 <UButton
@@ -218,7 +219,6 @@ async function handleDeleteAccount() {
                         v-if="deleteError"
                         :description="deleteError"
                         color="error"
-                        variant="subtle"
                         title="Error"
                         icon="i-lucide-circle-x"
                     />
@@ -235,5 +235,5 @@ async function handleDeleteAccount() {
                 />
             </template>
         </UModal>
-    </UContainer>
+    </div>
 </template>

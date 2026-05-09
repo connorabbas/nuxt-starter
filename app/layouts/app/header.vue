@@ -69,9 +69,9 @@ const { subPageNavItems, navMenuItems, userMenuItems } = useAppLayout()
         </div>
 
         <UMain>
-            <div class="py-4 sm:py-6">
+            <UContainer class="w-full">
                 <slot />
-            </div>
+            </UContainer>
         </UMain>
 
         <USeparator icon="i-simple-icons-nuxtdotjs" />

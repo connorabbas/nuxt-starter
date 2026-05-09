@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+    description: 'A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours.'
+})
+
 const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
@@ -25,7 +29,6 @@ function dismissAccountDeletedAlert() {
         >
             <UAlert
                 color="success"
-                variant="subtle"
                 title="Account successfully deleted"
                 description="Your account and all associated data have been permanently removed. We're sorry to see you go, but you're always welcome back."
                 icon="i-lucide-circle-check-big"

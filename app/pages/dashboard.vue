@@ -2,7 +2,8 @@
 definePageMeta({
     layout: 'app',
     middleware: ['auth'],
-    pageTitle: 'Dashboard'
+    pageTitle: 'Dashboard',
+    description: 'Manage your account and application data.'
 })
 
 const config = useRuntimeConfig()
@@ -28,7 +29,7 @@ const loading = ref(false)
 async function fetchExample() {
     try {
         loading.value = true
-        const response = await useNuxtApp().$appFetch('/api/app/fetch-example')
+        const response = await useNuxtApp().$appFetch('/api/app/fetch-example') // todo type
         data.value = response
     } catch (err: unknown) {
         error.value = err
@@ -48,45 +49,42 @@ function dismissError() {
 </script>
 
 <template>
-    <UContainer class="flex flex-col gap-4 sm:gap-6 w-full">
-        <UAlert
-            v-if="showSuccessMessage && successMessage"
-            color="success"
-            variant="subtle"
-            title="Success!"
-            :description="successMessage"
-            icon="i-lucide-circle-check-big"
-            close
-            @update:open="dismissSuccessMessageAlert"
-        />
-
-        <UAlert
-            v-if="error"
-            color="error"
-            variant="subtle"
-            title="Error"
-            :description="errorMessage"
-            icon="i-lucide-circle-x"
-            close
-            @update:open="dismissError"
-        />
-
-        <UPageCard
-            class="w-full max-w-md mx-auto"
-            title="Dashboard"
-            description="Logged in!"
-            variant="subtle"
-        >
-            <UButton
-                class="justify-center"
-                label="Test - Fetch Example"
-                icon="i-lucide-flask-conical"
-                :loading="loading"
-                @click="fetchExample()"
+    <UPage>
+        <UPageBody>
+            <UAlert
+                v-if="showSuccessMessage && successMessage"
+                color="success"
+                title="Success!"
+                :description="successMessage"
+                icon="i-lucide-circle-check-big"
+                close
+                @update:open="dismissSuccessMessageAlert"
             />
-            <div v-if="data">
-                <code><pre class="whitespace-pre-wrap">{{ data }}</pre></code>
-            </div>
-        </UPageCard>
-    </UContainer>
+            <UAlert
+                v-if="error"
+                color="error"
+                title="Error"
+                :description="errorMessage"
+                icon="i-lucide-circle-x"
+                close
+                @update:open="dismissError"
+            />
+            <UPageCard
+                class="w-full max-w-md mx-auto"
+                title="Dashboard"
+                description="Logged in!"
+            >
+                <UButton
+                    class="justify-center"
+                    label="Test - Fetch Example"
+                    icon="i-lucide-flask-conical"
+                    :loading="loading"
+                    @click="fetchExample()"
+                />
+                <div v-if="data">
+                    <code><pre class="whitespace-pre-wrap">{{ data }}</pre></code>
+                </div>
+            </UPageCard>
+        </UPageBody>
+    </UPage>
 </template>
